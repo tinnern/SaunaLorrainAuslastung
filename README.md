@@ -15,7 +15,7 @@ The dashboard shows:
 ## How It Works
 
 ```
-GitHub Actions (every 5 min)
+GitHub Actions (every 15 min)
         |
         v
   Scrapes API at lorauna.app
@@ -27,7 +27,7 @@ GitHub Actions (every 5 min)
   GitHub Pages serves dashboard
 ```
 
-- **Scraper**: Runs automatically via GitHub Actions every 5 minutes
+- **Scraper**: Runs automatically via GitHub Actions every 15 minutes
 - **Data**: Stored in `data/` folder (JSON + CSV)
 - **Dashboard**: Static HTML/JS hosted on GitHub Pages
 

@@ -9,6 +9,7 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -116,7 +117,7 @@ def log_occupancy(saunas):
     # Ensure data directory exists
     DATA_DIR.mkdir(exist_ok=True)
 
-    timestamp = datetime.now().isoformat()
+    timestamp = datetime.now(ZoneInfo("Europe/Zurich")).isoformat()
 
     # Save current state
     save_current(saunas, timestamp)
