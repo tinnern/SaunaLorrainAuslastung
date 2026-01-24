@@ -286,5 +286,21 @@
     "max_seats": 40,
     "occupancy_percent": 70.0,
     "capacity_message": "Mir si guet bsuecht. | Quite busy"
+  },
+  {
+    "timestamp": "2026-01-24T20:45:19.996545+01:00",
+    "name": "Sauna",
+    "current_seats": 32,
+    "max_seats": 40,
+    "occupancy_percent": 80.0,
+    "capacity_message": "Mir si guet bsuecht. | Quite busy"
+  },
+  {
+    "timestamp": "2026-01-24T20:45:19.996545+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 28,
+    "max_seats": 40,
+    "occupancy_percent": 70.0,
+    "capacity_message": "Mir si guet bsuecht. | Quite busy"
   }
 ]
