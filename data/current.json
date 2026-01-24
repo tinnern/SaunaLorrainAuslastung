@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-24T22:15:22.793754+01:00",
+  "timestamp": "2026-01-24T22:24:58.544518+01:00",
   "saunas": [
     {
       "name": "Sauna",
-      "current_seats": 12,
+      "current_seats": -1,
       "max_seats": 40,
-      "occupancy_percent": 30.0,
-      "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
+      "occupancy_percent": -2.5,
+      "capacity_message": "Mir hei zue. | Closed."
     },
     {
       "name": "Sauna rechts",
