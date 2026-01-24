@@ -1,121 +1,56 @@
-# Sauna Lorraine Occupancy Tracker
+# Sauna Lorrainebad Auslastung
 
-Tracks and logs occupancy data from the Lorrainebad sauna in Bern.
+Live occupancy tracker for the [Lorrainebad Sauna](https://saunalorrainebad.ch/) in Bern.
 
-## Quick Start
+## Live Dashboard
 
-```bash
-pip install -r requirements.txt
-python scraper.py
+**https://real-slin-shady.github.io/SaunaLorrainAuslastung/**
+
+The dashboard shows:
+- Current occupancy (live)
+- Typical occupancy by hour (average over collected data)
+- Last 24 hours history
+- Best times to visit (lowest average occupancy)
+
+## How It Works
+
+```
+GitHub Actions (every 15 min)
+        |
+        v
+  Scrapes API at lorauna.app
+        |
+        v
+  Saves data to /data folder
+        |
+        v
+  GitHub Pages serves dashboard
 ```
 
-Data is logged to `occupancy_log.csv` with columns:
-- `timestamp` - ISO format datetime
-- `name` - Sauna name
+- **Scraper**: Runs automatically via GitHub Actions every 15 minutes
+- **Data**: Stored in `data/` folder (JSON + CSV)
+- **Dashboard**: Static HTML/JS hosted on GitHub Pages
+
+## Data Collected
+
+The API provides:
 - `current_seats` - Currently occupied seats
-- `max_seats` - Maximum capacity
-- `occupancy_percent` - Calculated percentage
-- `capacity_message` - Status message from the API
+- `max_seats` - Maximum capacity (40)
+- `capacity_message` - Status in Berndütsch + English
 
----
+Data is stored in:
+- `data/current.json` - Latest reading
+- `data/occupancy_log.json` - Full history
+- `data/statistics.json` - Hourly averages
+- `data/occupancy_log.csv` - CSV backup
 
-## Running Continuously
+## Tech Stack
 
-### Option 1: Cron (macOS/Linux) - Recommended for local
+- Python (scraper)
+- Chart.js (charts)
+- GitHub Actions (scheduling)
+- GitHub Pages (hosting)
 
-Run every 15 minutes:
+## Note
 
-```bash
-# Edit crontab
-crontab -e
-
-# Add this line (adjust path):
-*/15 * * * * cd /Users/slin/Documents/Privat/SaunaLorrainAuslastung && /usr/bin/python3 scraper.py >> cron.log 2>&1
-```
-
-### Option 2: macOS launchd (runs even after reboot)
-
-1. Create `~/Library/LaunchAgents/ch.saunalorrainebad.tracker.plist`:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>ch.saunalorrainebad.tracker</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/python3</string>
-        <string>/Users/slin/Documents/Privat/SaunaLorrainAuslastung/scraper.py</string>
-    </array>
-    <key>StartInterval</key>
-    <integer>900</integer>
-    <key>WorkingDirectory</key>
-    <string>/Users/slin/Documents/Privat/SaunaLorrainAuslastung</string>
-    <key>StandardOutPath</key>
-    <string>/Users/slin/Documents/Privat/SaunaLorrainAuslastung/launchd.log</string>
-    <key>StandardErrorPath</key>
-    <string>/Users/slin/Documents/Privat/SaunaLorrainAuslastung/launchd.log</string>
-</dict>
-</plist>
-```
-
-2. Load it:
-```bash
-launchctl load ~/Library/LaunchAgents/ch.saunalorrainebad.tracker.plist
-```
-
-3. To stop:
-```bash
-launchctl unload ~/Library/LaunchAgents/ch.saunalorrainebad.tracker.plist
-```
-
-### Option 3: Cloud deployment (24/7, no local machine needed)
-
-**Free/cheap options:**
-
-1. **Railway.app** - Free tier, easy Python deployment
-2. **Render.com** - Free cron jobs
-3. **PythonAnywhere** - Free tier includes scheduled tasks
-4. **GitHub Actions** - Free scheduled workflows
-
-Example GitHub Actions workflow (`.github/workflows/scrape.yml`):
-
-```yaml
-name: Scrape Sauna Occupancy
-on:
-  schedule:
-    - cron: '*/15 * * * *'  # Every 15 minutes
-  workflow_dispatch:
-
-jobs:
-  scrape:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install -r requirements.txt
-      - run: python scraper.py
-      - name: Commit data
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add occupancy_log.csv
-          git diff --staged --quiet || git commit -m "Update occupancy data"
-          git push
-```
-
----
-
-## Viewing the Data
-
-The CSV can be opened in Excel, Google Sheets, or analyzed with Python/pandas:
-
-```python
-import pandas as pd
-df = pd.read_csv("occupancy_log.csv", parse_dates=["timestamp"])
-print(df.groupby(df["timestamp"].dt.hour)["occupancy_percent"].mean())
-```
+The API returns two saunas ("Sauna" and "Sauna rechts"). Currently only "Sauna" is displayed on the dashboard, but both are tracked in the data files for future analysis.
