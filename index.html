@@ -344,7 +344,7 @@
         function renderHistoryChart(records) {
             const ctx = document.getElementById('historyChart').getContext('2d');
 
-            // Get last 24 hours of data, only for "Sauna"
+            // Get last 24 hours of data, only for "Sauna", sorted by time
             const now = new Date();
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
 
@@ -353,7 +353,13 @@
                 .map(r => ({
                     x: new Date(r.timestamp),
                     y: r.occupancy_percent
-                }));
+                }))
+                .sort((a, b) => a.x - b.x);
+
+            if (data.length === 0) {
+                ctx.canvas.parentElement.innerHTML = '<div class="loading">Noch keine Daten der letzten 24h</div>';
+                return;
+            }
 
             new Chart(ctx, {
                 type: 'line',
