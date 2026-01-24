@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": "2026-01-24T17:40:12.541031",
+    "name": "Sauna",
+    "current_seats": 38,
+    "max_seats": 40,
+    "occupancy_percent": 95.0,
+    "capacity_message": "Mir si fasch vou. | Almost full."
+  },
+  {
+    "timestamp": "2026-01-24T17:40:12.541031",
+    "name": "Sauna rechts",
+    "current_seats": 28,
+    "max_seats": 40,
+    "occupancy_percent": 70.0,
+    "capacity_message": "Mir si guet bsuecht. | Quite busy"
+  }
+]

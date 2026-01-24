@@ -14,7 +14,10 @@ import requests
 
 API_URL = "https://lorauna.app/api"
 GRAPHQL_QUERY = "{ allSaunas { name, current_seats, max_seats, capacity_message } }"
-DATA_FILE = Path(__file__).parent / "occupancy_log.csv"
+DATA_DIR = Path(__file__).parent / "data"
+CSV_FILE = DATA_DIR / "occupancy_log.csv"
+JSON_FILE = DATA_DIR / "occupancy_log.json"
+CURRENT_FILE = DATA_DIR / "current.json"
 
 
 def fetch_occupancy():
@@ -34,39 +37,130 @@ def fetch_occupancy():
         return None
 
 
+def load_existing_data():
+    """Load existing JSON data."""
+    if JSON_FILE.exists():
+        with open(JSON_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def save_json_data(records):
+    """Save data to JSON file."""
+    with open(JSON_FILE, "w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2)
+
+
+def save_current(saunas, timestamp):
+    """Save current state for quick access."""
+    current = {
+        "timestamp": timestamp,
+        "saunas": []
+    }
+    for sauna in saunas:
+        current_seats = sauna.get("current_seats", 0)
+        max_seats = sauna.get("max_seats", 1)
+        current["saunas"].append({
+            "name": sauna.get("name", "Unknown"),
+            "current_seats": current_seats,
+            "max_seats": max_seats,
+            "occupancy_percent": round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0,
+            "capacity_message": sauna.get("capacity_message", "")
+        })
+
+    with open(CURRENT_FILE, "w", encoding="utf-8") as f:
+        json.dump(current, f, indent=2)
+
+
+def calculate_statistics(records):
+    """Calculate hourly statistics and save them."""
+    from collections import defaultdict
+
+    # Group by hour and day of week
+    hourly_stats = defaultdict(lambda: defaultdict(list))
+
+    for record in records:
+        try:
+            dt = datetime.fromisoformat(record["timestamp"])
+            hour = dt.hour
+            day = dt.strftime("%A")
+            hourly_stats[hour][record["name"]].append(record["occupancy_percent"])
+        except (KeyError, ValueError):
+            continue
+
+    # Calculate averages
+    stats = {"by_hour": {}, "by_day_hour": defaultdict(dict)}
+
+    for hour in range(24):
+        stats["by_hour"][hour] = {}
+        for name in hourly_stats[hour]:
+            values = hourly_stats[hour][name]
+            if values:
+                stats["by_hour"][hour][name] = {
+                    "avg": round(sum(values) / len(values), 1),
+                    "min": round(min(values), 1),
+                    "max": round(max(values), 1),
+                    "count": len(values)
+                }
+
+    stats_file = DATA_DIR / "statistics.json"
+    with open(stats_file, "w", encoding="utf-8") as f:
+        json.dump(stats, f, indent=2)
+
+
 def log_occupancy(saunas):
-    """Log occupancy data to CSV file."""
+    """Log occupancy data to CSV and JSON files."""
     if not saunas:
         return
 
+    # Ensure data directory exists
+    DATA_DIR.mkdir(exist_ok=True)
+
     timestamp = datetime.now().isoformat()
-    file_exists = DATA_FILE.exists()
 
-    with open(DATA_FILE, "a", newline="", encoding="utf-8") as f:
+    # Save current state
+    save_current(saunas, timestamp)
+
+    # Load existing records
+    records = load_existing_data()
+
+    # Append new records
+    for sauna in saunas:
+        current_seats = sauna.get("current_seats", 0)
+        max_seats = sauna.get("max_seats", 1)
+        occupancy_pct = round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0
+
+        record = {
+            "timestamp": timestamp,
+            "name": sauna.get("name", "Unknown"),
+            "current_seats": current_seats,
+            "max_seats": max_seats,
+            "occupancy_percent": occupancy_pct,
+            "capacity_message": sauna.get("capacity_message", "")
+        }
+        records.append(record)
+
+    # Save JSON
+    save_json_data(records)
+
+    # Calculate and save statistics
+    calculate_statistics(records)
+
+    # Also save to CSV for compatibility
+    csv_exists = CSV_FILE.exists()
+    with open(CSV_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-
-        # Write header if file is new
-        if not file_exists:
-            writer.writerow([
-                "timestamp",
-                "name",
-                "current_seats",
-                "max_seats",
-                "occupancy_percent",
-                "capacity_message"
-            ])
-
+        if not csv_exists:
+            writer.writerow(["timestamp", "name", "current_seats", "max_seats", "occupancy_percent", "capacity_message"])
         for sauna in saunas:
-            current = sauna.get("current_seats", 0)
+            current_seats = sauna.get("current_seats", 0)
             max_seats = sauna.get("max_seats", 1)
-            occupancy_pct = round((current / max_seats) * 100, 1) if max_seats > 0 else 0
-
             writer.writerow([
                 timestamp,
                 sauna.get("name", "Unknown"),
-                current,
+                current_seats,
                 max_seats,
-                occupancy_pct,
+                round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0,
                 sauna.get("capacity_message", "")
             ])
 

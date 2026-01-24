@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sauna Lorrainebad - Auslastung</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #f39c12, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .current-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sauna-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sauna-name {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .occupancy-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .occupancy-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .occupancy-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .occupancy-circle .bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 8;
+        }
+
+        .occupancy-circle .progress {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .occupancy-circle .percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .occupancy-info {
+            flex: 1;
+        }
+
+        .seats {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .message {
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #f39c12;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .stat-hour {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .stat-value.low { color: #2ecc71; }
+        .stat-value.medium { color: #f39c12; }
+        .stat-value.high { color: #e74c3c; }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .last-update {
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 8px;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab.active {
+            background: #f39c12;
+            color: #000;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .sauna-card { padding: 20px; }
+            .occupancy-circle { width: 80px; height: 80px; }
+            .seats { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sauna Lorrainebad</h1>
+            <p class="subtitle">Aktuelle Auslastung & Statistiken</p>
+        </header>
+
+        <div id="current-status" class="current-status">
+            <div class="loading">Lade aktuelle Daten...</div>
+        </div>
+
+        <div class="section">
+            <h2>Typische Auslastung nach Uhrzeit</h2>
+            <div class="chart-container">
+                <canvas id="hourlyChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f39c12;"></div>
+                    <span>Sauna (links)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3498db;"></div>
+                    <span>Sauna rechts</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Verlauf der letzten 24 Stunden</h2>
+            <div class="chart-container">
+                <canvas id="historyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Beste Zeiten (wenig los)</h2>
+            <div id="best-times" class="stats-grid">
+                <div class="loading">Berechne...</div>
+            </div>
+        </div>
+
+        <p class="last-update" id="last-update"></p>
+    </div>
+
+    <script>
+        const COLORS = {
+            'Sauna': '#f39c12',
+            'Sauna rechts': '#3498db'
+        };
+
+        function getColor(percent) {
+            if (percent < 50) return '#2ecc71';
+            if (percent < 80) return '#f39c12';
+            return '#e74c3c';
+        }
+
+        function getColorClass(percent) {
+            if (percent < 50) return 'low';
+            if (percent < 80) return 'medium';
+            return 'high';
+        }
+
+        function createOccupancyCircle(percent) {
+            const color = getColor(percent);
+            const circumference = 2 * Math.PI * 42;
+            const offset = circumference - (Math.min(percent, 100) / 100) * circumference;
+
+            return `
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <circle class="bg" cx="50" cy="50" r="42"></circle>
+                    <circle class="progress" cx="50" cy="50" r="42"
+                        style="stroke: ${color}; stroke-dasharray: ${circumference}; stroke-dashoffset: ${offset};">
+                    </circle>
+                </svg>
+                <span class="percentage" style="color: ${color}">${Math.round(percent)}%</span>
+            `;
+        }
+
+        function renderCurrentStatus(data) {
+            const container = document.getElementById('current-status');
+
+            if (!data || !data.saunas || data.saunas.length === 0) {
+                container.innerHTML = '<div class="loading">Keine aktuellen Daten verfügbar</div>';
+                return;
+            }
+
+            container.innerHTML = data.saunas.map(sauna => `
+                <div class="sauna-card">
+                    <div class="sauna-name">${sauna.name}</div>
+                    <div class="occupancy-display">
+                        <div class="occupancy-circle">
+                            ${createOccupancyCircle(sauna.occupancy_percent)}
+                        </div>
+                        <div class="occupancy-info">
+                            <div class="seats">${sauna.current_seats} / ${sauna.max_seats}</div>
+                            <div class="message">${sauna.capacity_message}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('last-update').textContent =
+                `Letzte Aktualisierung: ${new Date(data.timestamp).toLocaleString('de-CH')}`;
+        }
+
+        function renderHourlyChart(stats) {
+            const ctx = document.getElementById('hourlyChart').getContext('2d');
+
+            const hours = [];
+            const datasets = {};
+
+            for (let h = 6; h <= 22; h++) {
+                hours.push(`${h}:00`);
+            }
+
+            // Initialize datasets for each sauna
+            Object.keys(COLORS).forEach(name => {
+                datasets[name] = [];
+            });
+
+            for (let h = 6; h <= 22; h++) {
+                const hourData = stats.by_hour[h] || {};
+                Object.keys(COLORS).forEach(name => {
+                    const data = hourData[name];
+                    datasets[name].push(data ? data.avg : null);
+                });
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours,
+                    datasets: Object.keys(COLORS).map(name => ({
+                        label: name,
+                        data: datasets[name],
+                        borderColor: COLORS[name],
+                        backgroundColor: COLORS[name] + '20',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 120,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888', callback: v => v + '%' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderHistoryChart(records) {
+            const ctx = document.getElementById('historyChart').getContext('2d');
+
+            // Get last 24 hours of data
+            const now = new Date();
+            const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
+
+            const recentRecords = records.filter(r =>
+                new Date(r.timestamp) >= oneDayAgo
+            );
+
+            // Group by sauna
+            const byName = {};
+            recentRecords.forEach(r => {
+                if (!byName[r.name]) byName[r.name] = [];
+                byName[r.name].push({
+                    x: new Date(r.timestamp),
+                    y: r.occupancy_percent
+                });
+            });
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: Object.keys(byName).map(name => ({
+                        label: name,
+                        data: byName[name],
+                        borderColor: COLORS[name] || '#999',
+                        backgroundColor: (COLORS[name] || '#999') + '20',
+                        fill: true,
+                        tension: 0.2,
+                        pointRadius: 2
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 120,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888', callback: v => v + '%' }
+                        },
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                                displayFormats: { hour: 'HH:mm' }
+                            },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderBestTimes(stats) {
+            const container = document.getElementById('best-times');
+
+            // Find hours with lowest average occupancy (during open hours)
+            const hourlyAvgs = [];
+            for (let h = 6; h <= 22; h++) {
+                const hourData = stats.by_hour[h] || {};
+                let total = 0;
+                let count = 0;
+                Object.values(hourData).forEach(d => {
+                    if (d && d.avg !== undefined) {
+                        total += d.avg;
+                        count++;
+                    }
+                });
+                if (count > 0) {
+                    hourlyAvgs.push({ hour: h, avg: total / count });
+                }
+            }
+
+            // Sort by average and take top 6
+            const best = hourlyAvgs.sort((a, b) => a.avg - b.avg).slice(0, 6);
+
+            if (best.length === 0) {
+                container.innerHTML = '<div class="loading">Noch nicht genug Daten gesammelt</div>';
+                return;
+            }
+
+            container.innerHTML = best.map(item => `
+                <div class="stat-item">
+                    <div class="stat-hour">${item.hour}:00 Uhr</div>
+                    <div class="stat-value ${getColorClass(item.avg)}">${Math.round(item.avg)}%</div>
+                </div>
+            `).join('');
+        }
+
+        async function loadData() {
+            try {
+                // Load current status
+                const currentRes = await fetch('data/current.json');
+                if (currentRes.ok) {
+                    const current = await currentRes.json();
+                    renderCurrentStatus(current);
+                }
+
+                // Load statistics
+                const statsRes = await fetch('data/statistics.json');
+                if (statsRes.ok) {
+                    const stats = await statsRes.json();
+                    renderHourlyChart(stats);
+                    renderBestTimes(stats);
+                }
+
+                // Load history
+                const historyRes = await fetch('data/occupancy_log.json');
+                if (historyRes.ok) {
+                    const records = await historyRes.json();
+                    renderHistoryChart(records);
+                }
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Load Chart.js time adapter
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js';
+        script.onload = loadData;
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
