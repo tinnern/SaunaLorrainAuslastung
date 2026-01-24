@@ -345,36 +345,42 @@
         }
 
         function renderHistoryChart(records) {
-            const ctx = document.getElementById('historyChart').getContext('2d');
+            const container = document.getElementById('historyChart').parentElement;
 
             // Get last 24 hours of data, only for "Sauna", sorted by time
             const now = new Date();
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
 
-            const data = records
+            const filteredData = records
                 .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo)
-                .map(r => ({
-                    x: new Date(r.timestamp),
-                    y: r.occupancy_percent
-                }))
-                .sort((a, b) => a.x - b.x);
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-            if (data.length === 0) {
-                ctx.canvas.parentElement.innerHTML = '<div class="loading">Noch keine Daten der letzten 24h</div>';
+            // Need at least 2 data points for a meaningful chart
+            if (filteredData.length < 2) {
+                container.innerHTML = '<div class="loading">Sammle Daten... (mind. 2 Messpunkte nötig)</div>';
                 return;
             }
 
+            // Use simple labels instead of time scale to avoid rendering issues
+            const labels = filteredData.map(r => {
+                const d = new Date(r.timestamp);
+                return d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+            });
+            const values = filteredData.map(r => r.occupancy_percent);
+
+            const ctx = document.getElementById('historyChart').getContext('2d');
             new Chart(ctx, {
                 type: 'line',
                 data: {
+                    labels: labels,
                     datasets: [{
                         label: 'Auslastung',
-                        data: data,
+                        data: values,
                         borderColor: CHART_COLOR,
                         borderWidth: 2,
                         fill: false,
                         tension: 0.3,
-                        pointRadius: 3,
+                        pointRadius: 4,
                         pointBackgroundColor: CHART_COLOR
                     }]
                 },
@@ -392,13 +398,8 @@
                             ticks: { color: '#888', callback: v => v + '%' }
                         },
                         x: {
-                            type: 'time',
-                            time: {
-                                unit: 'hour',
-                                displayFormats: { hour: 'HH:mm' }
-                            },
                             grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#888' }
+                            ticks: { color: '#888', maxRotation: 45 }
                         }
                     }
                 }
@@ -463,11 +464,8 @@
             }
         }
 
-        // Load Chart.js time adapter
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js';
-        script.onload = loadData;
-        document.head.appendChild(script);
+        // Load data when page is ready
+        loadData();
     </script>
 </body>
 </html>
