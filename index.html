@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -45,36 +45,37 @@
         }
 
         .current-status {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            display: flex;
+            justify-content: center;
             margin-bottom: 30px;
         }
 
         .sauna-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 25px;
+            padding: 30px 40px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
         }
 
         .sauna-name {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #aaa;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .occupancy-display {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .occupancy-circle {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 140px;
+            height: 140px;
         }
 
         .occupancy-circle svg {
@@ -84,12 +85,12 @@
         .occupancy-circle .bg {
             fill: none;
             stroke: rgba(255, 255, 255, 0.1);
-            stroke-width: 8;
+            stroke-width: 10;
         }
 
         .occupancy-circle .progress {
             fill: none;
-            stroke-width: 8;
+            stroke-width: 10;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.5s ease;
         }
@@ -99,23 +100,23 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: bold;
         }
 
         .occupancy-info {
-            flex: 1;
+            text-align: center;
         }
 
         .seats {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .message {
             color: #888;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 1.4;
         }
 
@@ -135,12 +136,12 @@
 
         .chart-container {
             position: relative;
-            height: 300px;
+            height: 250px;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
             gap: 10px;
             margin-top: 20px;
         }
@@ -167,28 +168,6 @@
         .stat-value.medium { color: #f39c12; }
         .stat-value.high { color: #e74c3c; }
 
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: #888;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
-
         .last-update {
             text-align: center;
             color: #666;
@@ -202,36 +181,11 @@
             color: #888;
         }
 
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            border-radius: 8px;
-            color: #888;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .tab.active {
-            background: #f39c12;
-            color: #000;
-        }
-
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
-            .sauna-card { padding: 20px; }
-            .occupancy-circle { width: 80px; height: 80px; }
-            .seats { font-size: 1.4rem; }
+            .sauna-card { padding: 25px; }
+            .occupancy-circle { width: 120px; height: 120px; }
+            .seats { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -250,16 +204,6 @@
             <h2>Typische Auslastung nach Uhrzeit</h2>
             <div class="chart-container">
                 <canvas id="hourlyChart"></canvas>
-            </div>
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #f39c12;"></div>
-                    <span>Sauna (links)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #3498db;"></div>
-                    <span>Sauna rechts</span>
-                </div>
             </div>
         </div>
 
@@ -281,10 +225,9 @@
     </div>
 
     <script>
-        const COLORS = {
-            'Sauna': '#f39c12',
-            'Sauna rechts': '#3498db'
-        };
+        // Only show "Sauna" (not "Sauna rechts")
+        const DISPLAY_SAUNA = 'Sauna';
+        const CHART_COLOR = '#f39c12';
 
         function getColor(percent) {
             if (percent < 50) return '#2ecc71';
@@ -300,13 +243,13 @@
 
         function createOccupancyCircle(percent) {
             const color = getColor(percent);
-            const circumference = 2 * Math.PI * 42;
+            const circumference = 2 * Math.PI * 60;
             const offset = circumference - (Math.min(percent, 100) / 100) * circumference;
 
             return `
-                <svg width="100" height="100" viewBox="0 0 100 100">
-                    <circle class="bg" cx="50" cy="50" r="42"></circle>
-                    <circle class="progress" cx="50" cy="50" r="42"
+                <svg width="140" height="140" viewBox="0 0 140 140">
+                    <circle class="bg" cx="70" cy="70" r="60"></circle>
+                    <circle class="progress" cx="70" cy="70" r="60"
                         style="stroke: ${color}; stroke-dasharray: ${circumference}; stroke-dashoffset: ${offset};">
                     </circle>
                 </svg>
@@ -322,20 +265,27 @@
                 return;
             }
 
-            container.innerHTML = data.saunas.map(sauna => `
+            // Only show "Sauna", not "Sauna rechts"
+            const sauna = data.saunas.find(s => s.name === DISPLAY_SAUNA);
+            if (!sauna) {
+                container.innerHTML = '<div class="loading">Keine aktuellen Daten verfügbar</div>';
+                return;
+            }
+
+            container.innerHTML = `
                 <div class="sauna-card">
-                    <div class="sauna-name">${sauna.name}</div>
+                    <div class="sauna-name">Aktuelle Auslastung</div>
                     <div class="occupancy-display">
                         <div class="occupancy-circle">
                             ${createOccupancyCircle(sauna.occupancy_percent)}
                         </div>
                         <div class="occupancy-info">
-                            <div class="seats">${sauna.current_seats} / ${sauna.max_seats}</div>
+                            <div class="seats">${sauna.current_seats} / ${sauna.max_seats} Plätze</div>
                             <div class="message">${sauna.capacity_message}</div>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
 
             document.getElementById('last-update').textContent =
                 `Letzte Aktualisierung: ${new Date(data.timestamp).toLocaleString('de-CH')}`;
@@ -345,39 +295,29 @@
             const ctx = document.getElementById('hourlyChart').getContext('2d');
 
             const hours = [];
-            const datasets = {};
+            const data = [];
 
             for (let h = 6; h <= 22; h++) {
                 hours.push(`${h}:00`);
-            }
-
-            // Initialize datasets for each sauna
-            Object.keys(COLORS).forEach(name => {
-                datasets[name] = [];
-            });
-
-            for (let h = 6; h <= 22; h++) {
                 const hourData = stats.by_hour[h] || {};
-                Object.keys(COLORS).forEach(name => {
-                    const data = hourData[name];
-                    datasets[name].push(data ? data.avg : null);
-                });
+                const saunaData = hourData[DISPLAY_SAUNA];
+                data.push(saunaData ? saunaData.avg : null);
             }
 
             new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: hours,
-                    datasets: Object.keys(COLORS).map(name => ({
-                        label: name,
-                        data: datasets[name],
-                        borderColor: COLORS[name],
-                        backgroundColor: COLORS[name] + '20',
+                    datasets: [{
+                        label: 'Auslastung',
+                        data: data,
+                        borderColor: CHART_COLOR,
+                        backgroundColor: CHART_COLOR + '30',
                         fill: true,
                         tension: 0.4,
                         pointRadius: 4,
                         pointHoverRadius: 6
-                    }))
+                    }]
                 },
                 options: {
                     responsive: true,
@@ -404,36 +344,29 @@
         function renderHistoryChart(records) {
             const ctx = document.getElementById('historyChart').getContext('2d');
 
-            // Get last 24 hours of data
+            // Get last 24 hours of data, only for "Sauna"
             const now = new Date();
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
 
-            const recentRecords = records.filter(r =>
-                new Date(r.timestamp) >= oneDayAgo
-            );
-
-            // Group by sauna
-            const byName = {};
-            recentRecords.forEach(r => {
-                if (!byName[r.name]) byName[r.name] = [];
-                byName[r.name].push({
+            const data = records
+                .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo)
+                .map(r => ({
                     x: new Date(r.timestamp),
                     y: r.occupancy_percent
-                });
-            });
+                }));
 
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    datasets: Object.keys(byName).map(name => ({
-                        label: name,
-                        data: byName[name],
-                        borderColor: COLORS[name] || '#999',
-                        backgroundColor: (COLORS[name] || '#999') + '20',
+                    datasets: [{
+                        label: 'Auslastung',
+                        data: data,
+                        borderColor: CHART_COLOR,
+                        backgroundColor: CHART_COLOR + '30',
                         fill: true,
                         tension: 0.2,
                         pointRadius: 2
-                    }))
+                    }]
                 },
                 options: {
                     responsive: true,
@@ -465,20 +398,13 @@
         function renderBestTimes(stats) {
             const container = document.getElementById('best-times');
 
-            // Find hours with lowest average occupancy (during open hours)
+            // Find hours with lowest average occupancy (only for "Sauna")
             const hourlyAvgs = [];
             for (let h = 6; h <= 22; h++) {
                 const hourData = stats.by_hour[h] || {};
-                let total = 0;
-                let count = 0;
-                Object.values(hourData).forEach(d => {
-                    if (d && d.avg !== undefined) {
-                        total += d.avg;
-                        count++;
-                    }
-                });
-                if (count > 0) {
-                    hourlyAvgs.push({ hour: h, avg: total / count });
+                const saunaData = hourData[DISPLAY_SAUNA];
+                if (saunaData && saunaData.avg !== undefined) {
+                    hourlyAvgs.push({ hour: h, avg: saunaData.avg });
                 }
             }
 
@@ -492,7 +418,7 @@
 
             container.innerHTML = best.map(item => `
                 <div class="stat-item">
-                    <div class="stat-hour">${item.hour}:00 Uhr</div>
+                    <div class="stat-hour">${item.hour}:00</div>
                     <div class="stat-value ${getColorClass(item.avg)}">${Math.round(item.avg)}%</div>
                 </div>
             `).join('');
