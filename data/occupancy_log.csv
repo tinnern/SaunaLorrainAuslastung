@@ -1,3 +1,5 @@
 timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-01-24T17:40:12.541031,Sauna,38,40,95.0,Mir si fasch vou. | Almost full.
 2026-01-24T17:40:12.541031,Sauna rechts,28,40,70.0,Mir si guet bsuecht. | Quite busy
+2026-01-24T16:42:31.396128,Sauna,41,40,102.5,Prätschvou und es git e Wartezyt. | Full with a waiting time.
+2026-01-24T16:42:31.396128,Sauna rechts,28,40,70.0,Mir si guet bsuecht. | Quite busy
