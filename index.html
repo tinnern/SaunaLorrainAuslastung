@@ -65,7 +65,28 @@
         .sauna-name {
             font-size: 1.2rem;
             color: #aaa;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .opening-status {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .opening-status.open {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .opening-status.closed {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
         }
 
         .occupancy-display {
@@ -317,6 +338,16 @@
             'Monday': { type: 'women-only', notice: 'Montag ist FLINTA*-Tag.' },
             'Wednesday': { type: 'closed', notice: 'Mittwoch ist die Sauna geschlossen.' }
         };
+        // Opening hours per weekday: [openHour, closeHour]
+        const OPENING_HOURS = {
+            'Monday': [10, 21],
+            'Tuesday': [10, 21],
+            'Wednesday': null, // closed
+            'Thursday': [10, 21],
+            'Friday': [10, 21],
+            'Saturday': [9, 21],
+            'Sunday': [9, 21]
+        };
 
         let globalStats = null;
         let hourlyChart = null;
@@ -350,6 +381,48 @@
             `;
         }
 
+        function isCurrentlyOpen() {
+            const now = new Date();
+            const currentDay = getCurrentWeekday();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const openingHours = OPENING_HOURS[currentDay];
+
+            if (!openingHours) return false;
+
+            const [openHour, closeHour] = openingHours;
+            // Close time is 21:30, so open until 21:30
+            if (currentHour < openHour) return false;
+            if (currentHour > closeHour) return false;
+            if (currentHour === closeHour && currentMinute > 30) return false;
+
+            return true;
+        }
+
+        function getOpeningStatus() {
+            const now = new Date();
+            const currentDay = getCurrentWeekday();
+            const openingHours = OPENING_HOURS[currentDay];
+
+            if (!openingHours) {
+                return { open: false, text: 'Heute geschlossen' };
+            }
+
+            const [openHour, closeHour] = openingHours;
+            const isOpen = isCurrentlyOpen();
+
+            if (isOpen) {
+                return { open: true, text: `Offen bis ${closeHour}:30` };
+            } else {
+                const currentHour = now.getHours();
+                if (currentHour < openHour) {
+                    return { open: false, text: `Öffnet um ${openHour}:00` };
+                } else {
+                    return { open: false, text: 'Geschlossen' };
+                }
+            }
+        }
+
         function renderCurrentStatus(data) {
             const container = document.getElementById('current-status');
 
@@ -365,9 +438,13 @@
                 return;
             }
 
+            const status = getOpeningStatus();
+            const statusClass = status.open ? 'open' : 'closed';
+
             container.innerHTML = `
                 <div class="sauna-card">
                     <div class="sauna-name">Aktuelle Auslastung</div>
+                    <div class="opening-status ${statusClass}">${status.text}</div>
                     <div class="occupancy-display">
                         <div class="occupancy-circle">
                             ${createOccupancyCircle(sauna.occupancy_percent)}
@@ -471,17 +548,23 @@
 
             // Use weekday-specific data only (no fallback)
             const weekdayData = globalStats.by_weekday?.[selectedWeekday] || {};
+            const openingHours = OPENING_HOURS[selectedWeekday];
 
-            for (let h = 6; h <= 22; h++) {
+            // If closed (Wednesday), show empty chart
+            if (!openingHours) {
+                hourlyChart.data.labels = [];
+                hourlyChart.data.datasets[0].data = [];
+                hourlyChart.update();
+                return;
+            }
+
+            const [openHour, closeHour] = openingHours;
+
+            for (let h = openHour; h <= closeHour; h++) {
                 hours.push(`${h}:00`);
-                // For Wednesday (closed), show null
-                if (selectedWeekday === 'Wednesday') {
-                    data.push(null);
-                } else {
-                    const hourData = weekdayData[h] || {};
-                    const saunaData = hourData[DISPLAY_SAUNA];
-                    data.push(saunaData ? saunaData.avg : null);
-                }
+                const hourData = weekdayData[h] || {};
+                const saunaData = hourData[DISPLAY_SAUNA];
+                data.push(saunaData ? saunaData.avg : null);
             }
 
             hourlyChart.data.labels = hours;
@@ -501,12 +584,12 @@
             // Use weekday-specific data for current day (no fallback)
             const currentDay = getCurrentWeekday();
             const weekdayData = stats.by_weekday?.[currentDay] || {};
+            const openingHours = OPENING_HOURS[currentDay];
 
-            for (let h = 6; h <= 22; h++) {
-                hours.push(`${h}:00`);
-                if (currentDay === 'Wednesday') {
-                    data.push(null);
-                } else {
+            if (openingHours) {
+                const [openHour, closeHour] = openingHours;
+                for (let h = openHour; h <= closeHour; h++) {
+                    hours.push(`${h}:00`);
                     const hourData = weekdayData[h] || {};
                     const saunaData = hourData[DISPLAY_SAUNA];
                     data.push(saunaData ? saunaData.avg : null);
@@ -627,18 +710,20 @@
             };
             dayLabel.textContent = dayNames[selectedWeekday] || '';
 
-            // Wednesday is closed
-            if (selectedWeekday === 'Wednesday') {
+            // Use weekday-specific data only (no fallback)
+            const weekdayData = stats.by_weekday?.[selectedWeekday] || {};
+            const openingHours = OPENING_HOURS[selectedWeekday];
+
+            if (!openingHours) {
                 container.innerHTML = '<div class="loading">Mittwoch geschlossen</div>';
                 return;
             }
 
-            // Use weekday-specific data only (no fallback)
-            const weekdayData = stats.by_weekday?.[selectedWeekday] || {};
+            const [openHour, closeHour] = openingHours;
 
             // Find hours with lowest average occupancy (only for "Sauna")
             const hourlyAvgs = [];
-            for (let h = 6; h <= 22; h++) {
+            for (let h = openHour; h <= closeHour; h++) {
                 const hourData = weekdayData[h] || {};
                 const saunaData = hourData[DISPLAY_SAUNA];
                 if (saunaData && saunaData.avg !== undefined) {

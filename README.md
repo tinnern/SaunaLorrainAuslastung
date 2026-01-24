@@ -8,26 +8,41 @@ Live occupancy tracker for the [Lorrainebad Sauna](https://saunalorrainebad.ch/)
 
 The dashboard shows:
 - Current occupancy (live)
-- Typical occupancy by hour (average over collected data)
+- Typical occupancy by hour per weekday
 - Last 24 hours history
 - Best times to visit (lowest average occupancy)
+
+## Opening Hours
+
+| Day | Hours |
+|-----|-------|
+| Monday (FLINTA*) | 10:00 - 21:30 |
+| Tuesday | 10:00 - 21:30 |
+| Wednesday | Closed |
+| Thursday | 10:00 - 21:30 |
+| Friday | 10:00 - 21:30 |
+| Saturday | 09:00 - 21:30 |
+| Sunday | 09:00 - 21:30 |
 
 ## How It Works
 
 ```
-GitHub Actions (every 15 min)
+cron-job.org (every 15 min)
         |
         v
-  Scrapes API at lorauna.app
+Triggers GitHub Actions
         |
         v
-  Saves data to /data folder
+Scrapes API at lorauna.app
         |
         v
-  GitHub Pages serves dashboard
+Saves data to /data folder
+        |
+        v
+GitHub Pages serves dashboard
 ```
 
-- **Scraper**: Runs automatically via GitHub Actions every 15 minutes
+- **Scraper**: Triggered every 15 minutes via [cron-job.org](https://cron-job.org) → GitHub Actions
 - **Data**: Stored in `data/` folder (JSON + CSV)
 - **Dashboard**: Static HTML/JS hosted on GitHub Pages
 
@@ -36,20 +51,21 @@ GitHub Actions (every 15 min)
 The API provides:
 - `current_seats` - Currently occupied seats
 - `max_seats` - Maximum capacity (40)
-- `capacity_message` - Status in Berndütsch + English
+- `capacity_message` - Status in Berndeutsch + English
 
 Data is stored in:
 - `data/current.json` - Latest reading
 - `data/occupancy_log.json` - Full history
-- `data/statistics.json` - Hourly averages
+- `data/statistics.json` - Hourly/weekday averages
 - `data/occupancy_log.csv` - CSV backup
 
 ## Tech Stack
 
 - Python (scraper)
 - Chart.js (charts)
-- GitHub Actions (scheduling)
+- GitHub Actions (workflow)
 - GitHub Pages (hosting)
+- cron-job.org (reliable scheduling)
 
 ## Note
 
