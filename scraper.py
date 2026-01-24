@@ -74,23 +74,34 @@ def save_current(saunas, timestamp):
 
 
 def calculate_statistics(records):
-    """Calculate hourly statistics and save them."""
+    """Calculate hourly and weekday statistics and save them."""
     from collections import defaultdict
 
-    # Group by hour and day of week
+    # Group by hour (overall) and by weekday+hour
     hourly_stats = defaultdict(lambda: defaultdict(list))
+    weekday_hourly_stats = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+    # Weekday names (0=Monday, 6=Sunday)
+    weekday_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
     for record in records:
         try:
             dt = datetime.fromisoformat(record["timestamp"])
             hour = dt.hour
-            day = dt.strftime("%A")
-            hourly_stats[hour][record["name"]].append(record["occupancy_percent"])
+            weekday = weekday_names[dt.weekday()]
+            name = record["name"]
+            occupancy = record["occupancy_percent"]
+
+            hourly_stats[hour][name].append(occupancy)
+            weekday_hourly_stats[weekday][hour][name].append(occupancy)
         except (KeyError, ValueError):
             continue
 
-    # Calculate averages
-    stats = {"by_hour": {}, "by_day_hour": defaultdict(dict)}
+    # Calculate overall hourly averages
+    stats = {
+        "by_hour": {},
+        "by_weekday": {}
+    }
 
     for hour in range(24):
         stats["by_hour"][hour] = {}
@@ -103,6 +114,21 @@ def calculate_statistics(records):
                     "max": round(max(values), 1),
                     "count": len(values)
                 }
+
+    # Calculate weekday-specific hourly averages
+    for weekday in weekday_names:
+        stats["by_weekday"][weekday] = {}
+        for hour in range(24):
+            stats["by_weekday"][weekday][hour] = {}
+            for name in weekday_hourly_stats[weekday][hour]:
+                values = weekday_hourly_stats[weekday][hour][name]
+                if values:
+                    stats["by_weekday"][weekday][hour][name] = {
+                        "avg": round(sum(values) / len(values), 1),
+                        "min": round(min(values), 1),
+                        "max": round(max(values), 1),
+                        "count": len(values)
+                    }
 
     stats_file = DATA_DIR / "statistics.json"
     with open(stats_file, "w", encoding="utf-8") as f:

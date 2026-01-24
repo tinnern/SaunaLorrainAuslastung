@@ -142,6 +142,74 @@
             height: 250px;
         }
 
+        .weekday-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .weekday-tab {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .weekday-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        .weekday-tab.active {
+            background: #f39c12;
+            border-color: #f39c12;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .weekday-tab.women-only {
+            border-color: #e91e8b;
+        }
+
+        .weekday-tab.women-only.active {
+            background: #e91e8b;
+        }
+
+        .weekday-tab.closed {
+            border-color: #666;
+            color: #555;
+            text-decoration: line-through;
+        }
+
+        .weekday-tab.closed.active {
+            background: #444;
+            color: #888;
+        }
+
+        .day-notice {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .day-notice.women-only {
+            background: rgba(233, 30, 139, 0.15);
+            border: 1px solid rgba(233, 30, 139, 0.3);
+            color: #e91e8b;
+        }
+
+        .day-notice.closed {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -205,6 +273,8 @@
 
         <div class="section">
             <h2>Typische Auslastung nach Uhrzeit</h2>
+            <div id="weekday-tabs" class="weekday-tabs"></div>
+            <div id="day-notice"></div>
             <div class="chart-container">
                 <canvas id="hourlyChart"></canvas>
             </div>
@@ -218,7 +288,7 @@
         </div>
 
         <div class="section">
-            <h2>Beste Zeiten (wenig los)</h2>
+            <h2>Beste Zeiten <span id="best-times-day"></span></h2>
             <div id="best-times" class="stats-grid">
                 <div class="loading">Berechne...</div>
             </div>
@@ -231,6 +301,26 @@
         // Only show "Sauna" (not "Sauna rechts")
         const DISPLAY_SAUNA = 'Sauna';
         const CHART_COLOR = '#f39c12';
+
+        // Weekday configuration
+        const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const WEEKDAY_LABELS = {
+            'Monday': 'Mo (Frauen)',
+            'Tuesday': 'Di',
+            'Wednesday': 'Mi (Zu)',
+            'Thursday': 'Do',
+            'Friday': 'Fr',
+            'Saturday': 'Sa',
+            'Sunday': 'So'
+        };
+        const SPECIAL_DAYS = {
+            'Monday': { type: 'women-only', notice: 'Montag ist Frauentag - nur für Frauen zugänglich.' },
+            'Wednesday': { type: 'closed', notice: 'Mittwoch ist die Sauna geschlossen.' }
+        };
+
+        let globalStats = null;
+        let hourlyChart = null;
+        let selectedWeekday = null;
 
         function getColor(percent) {
             if (percent < 50) return '#2ecc71';
@@ -294,20 +384,99 @@
                 `Letzte Aktualisierung: ${new Date(data.timestamp).toLocaleString('de-CH')}`;
         }
 
-        function renderHourlyChart(stats) {
-            const ctx = document.getElementById('hourlyChart').getContext('2d');
+        function getCurrentWeekday() {
+            return WEEKDAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+        }
+
+        function renderWeekdayTabs(stats) {
+            const container = document.getElementById('weekday-tabs');
+            const currentDay = getCurrentWeekday();
+            selectedWeekday = currentDay;
+
+            container.innerHTML = WEEKDAYS.map(day => {
+                const special = SPECIAL_DAYS[day];
+                const specialClass = special ? special.type : '';
+                const isActive = day === currentDay ? 'active' : '';
+                return `<button class="weekday-tab ${specialClass} ${isActive}" data-day="${day}">${WEEKDAY_LABELS[day]}</button>`;
+            }).join('');
+
+            // Add click handlers
+            container.querySelectorAll('.weekday-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    container.querySelectorAll('.weekday-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    selectedWeekday = tab.dataset.day;
+                    updateHourlyChart();
+                    updateDayNotice();
+                    renderBestTimes(globalStats);
+                });
+            });
+
+            updateDayNotice();
+        }
+
+        function updateDayNotice() {
+            const container = document.getElementById('day-notice');
+            const special = SPECIAL_DAYS[selectedWeekday];
+
+            if (special) {
+                container.innerHTML = `<div class="day-notice ${special.type}">${special.notice}</div>`;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        function updateHourlyChart() {
+            if (!globalStats || !hourlyChart) return;
 
             const hours = [];
             const data = [];
 
+            // Use weekday-specific data if available, otherwise fall back to overall
+            const weekdayData = globalStats.by_weekday?.[selectedWeekday] || {};
+
             for (let h = 6; h <= 22; h++) {
                 hours.push(`${h}:00`);
-                const hourData = stats.by_hour[h] || {};
+                const hourData = weekdayData[h] || globalStats.by_hour[h] || {};
                 const saunaData = hourData[DISPLAY_SAUNA];
-                data.push(saunaData ? saunaData.avg : null);
+                // For Wednesday (closed), show null
+                if (selectedWeekday === 'Wednesday') {
+                    data.push(null);
+                } else {
+                    data.push(saunaData ? saunaData.avg : null);
+                }
             }
 
-            new Chart(ctx, {
+            hourlyChart.data.labels = hours;
+            hourlyChart.data.datasets[0].data = data;
+            hourlyChart.update();
+        }
+
+        function renderHourlyChart(stats) {
+            globalStats = stats;
+            const ctx = document.getElementById('hourlyChart').getContext('2d');
+
+            renderWeekdayTabs(stats);
+
+            const hours = [];
+            const data = [];
+
+            // Use weekday-specific data for current day
+            const currentDay = getCurrentWeekday();
+            const weekdayData = stats.by_weekday?.[currentDay] || {};
+
+            for (let h = 6; h <= 22; h++) {
+                hours.push(`${h}:00`);
+                const hourData = weekdayData[h] || stats.by_hour[h] || {};
+                const saunaData = hourData[DISPLAY_SAUNA];
+                if (currentDay === 'Wednesday') {
+                    data.push(null);
+                } else {
+                    data.push(saunaData ? saunaData.avg : null);
+                }
+            }
+
+            hourlyChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: hours,
@@ -408,11 +577,32 @@
 
         function renderBestTimes(stats) {
             const container = document.getElementById('best-times');
+            const dayLabel = document.getElementById('best-times-day');
+
+            const dayNames = {
+                'Monday': '(Montag)',
+                'Tuesday': '(Dienstag)',
+                'Wednesday': '(Mittwoch)',
+                'Thursday': '(Donnerstag)',
+                'Friday': '(Freitag)',
+                'Saturday': '(Samstag)',
+                'Sunday': '(Sonntag)'
+            };
+            dayLabel.textContent = dayNames[selectedWeekday] || '';
+
+            // Wednesday is closed
+            if (selectedWeekday === 'Wednesday') {
+                container.innerHTML = '<div class="loading">Mittwoch geschlossen</div>';
+                return;
+            }
+
+            // Use weekday-specific data if available
+            const weekdayData = stats.by_weekday?.[selectedWeekday] || {};
 
             // Find hours with lowest average occupancy (only for "Sauna")
             const hourlyAvgs = [];
             for (let h = 6; h <= 22; h++) {
-                const hourData = stats.by_hour[h] || {};
+                const hourData = weekdayData[h] || stats.by_hour[h] || {};
                 const saunaData = hourData[DISPLAY_SAUNA];
                 if (saunaData && saunaData.avg !== undefined) {
                     hourlyAvgs.push({ hour: h, avg: saunaData.avg });
@@ -423,7 +613,7 @@
             const best = hourlyAvgs.sort((a, b) => a.avg - b.avg).slice(0, 6);
 
             if (best.length === 0) {
-                container.innerHTML = '<div class="loading">Noch nicht genug Daten gesammelt</div>';
+                container.innerHTML = '<div class="loading">Noch nicht genug Daten für diesen Wochentag</div>';
                 return;
             }
 
