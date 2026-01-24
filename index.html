@@ -426,23 +426,60 @@
             }
         }
 
+        function hasWeekdayData(weekday) {
+            const weekdayData = globalStats?.by_weekday?.[weekday] || {};
+            for (let h = 0; h < 24; h++) {
+                if (weekdayData[h] && weekdayData[h][DISPLAY_SAUNA]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function updateHourlyChart() {
             if (!globalStats || !hourlyChart) return;
+
+            const chartContainer = document.getElementById('hourlyChart').parentElement;
+            const noDataMsg = document.getElementById('hourly-no-data');
+
+            // Check if we have data for this weekday
+            const hasData = hasWeekdayData(selectedWeekday);
+
+            if (!hasData && selectedWeekday !== 'Wednesday') {
+                // Show no data message
+                if (!noDataMsg) {
+                    const msg = document.createElement('div');
+                    msg.id = 'hourly-no-data';
+                    msg.className = 'loading';
+                    msg.style.position = 'absolute';
+                    msg.style.top = '50%';
+                    msg.style.left = '50%';
+                    msg.style.transform = 'translate(-50%, -50%)';
+                    msg.textContent = 'Noch keine Daten für diesen Wochentag';
+                    chartContainer.style.position = 'relative';
+                    chartContainer.appendChild(msg);
+                }
+                hourlyChart.data.datasets[0].data = [];
+                hourlyChart.update();
+                return;
+            } else if (noDataMsg) {
+                noDataMsg.remove();
+            }
 
             const hours = [];
             const data = [];
 
-            // Use weekday-specific data if available, otherwise fall back to overall
+            // Use weekday-specific data only (no fallback)
             const weekdayData = globalStats.by_weekday?.[selectedWeekday] || {};
 
             for (let h = 6; h <= 22; h++) {
                 hours.push(`${h}:00`);
-                const hourData = weekdayData[h] || globalStats.by_hour[h] || {};
-                const saunaData = hourData[DISPLAY_SAUNA];
                 // For Wednesday (closed), show null
                 if (selectedWeekday === 'Wednesday') {
                     data.push(null);
                 } else {
+                    const hourData = weekdayData[h] || {};
+                    const saunaData = hourData[DISPLAY_SAUNA];
                     data.push(saunaData ? saunaData.avg : null);
                 }
             }
@@ -461,17 +498,17 @@
             const hours = [];
             const data = [];
 
-            // Use weekday-specific data for current day
+            // Use weekday-specific data for current day (no fallback)
             const currentDay = getCurrentWeekday();
             const weekdayData = stats.by_weekday?.[currentDay] || {};
 
             for (let h = 6; h <= 22; h++) {
                 hours.push(`${h}:00`);
-                const hourData = weekdayData[h] || stats.by_hour[h] || {};
-                const saunaData = hourData[DISPLAY_SAUNA];
                 if (currentDay === 'Wednesday') {
                     data.push(null);
                 } else {
+                    const hourData = weekdayData[h] || {};
+                    const saunaData = hourData[DISPLAY_SAUNA];
                     data.push(saunaData ? saunaData.avg : null);
                 }
             }
@@ -596,13 +633,13 @@
                 return;
             }
 
-            // Use weekday-specific data if available
+            // Use weekday-specific data only (no fallback)
             const weekdayData = stats.by_weekday?.[selectedWeekday] || {};
 
             // Find hours with lowest average occupancy (only for "Sauna")
             const hourlyAvgs = [];
             for (let h = 6; h <= 22; h++) {
-                const hourData = weekdayData[h] || stats.by_hour[h] || {};
+                const hourData = weekdayData[h] || {};
                 const saunaData = hourData[DISPLAY_SAUNA];
                 if (saunaData && saunaData.avg !== undefined) {
                     hourlyAvgs.push({ hour: h, avg: saunaData.avg });
