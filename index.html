@@ -776,112 +776,87 @@
             });
         }
 
-        function isHourOpen(date) {
+        function isTimeOpen(date) {
             const dayName = WEEKDAYS[date.getDay() === 0 ? 6 : date.getDay() - 1];
             const hours = OPENING_HOURS[dayName];
             if (!hours) return false;
 
             const [openHour, closeHour] = hours;
             const hour = date.getHours();
+            const minute = date.getMinutes();
 
-            return hour >= openHour && hour <= closeHour;
+            if (hour < openHour) return false;
+            if (hour > closeHour) return false;
+            if (hour === closeHour && minute > 30) return false;
+            return true;
         }
 
         function renderHistoryChart(records) {
             const container = document.getElementById('historyChart').parentElement;
+
+            // Get last 24 hours of data, only for "Sauna", sorted by time
             const now = new Date();
-
-            // Create hourly slots for last 24 hours
-            const slots = [];
-            for (let i = 23; i >= 0; i--) {
-                const slotTime = new Date(now);
-                slotTime.setHours(now.getHours() - i, 0, 0, 0);
-                slots.push({
-                    time: slotTime,
-                    label: slotTime.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' }),
-                    isOpen: isHourOpen(slotTime),
-                    values: []
-                });
-            }
-
-            // Map data to slots
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
+
             const filteredData = records
-                .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo && r.occupancy_percent >= 0);
+                .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo)
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-            filteredData.forEach(r => {
-                const d = new Date(r.timestamp);
-                const hourIndex = slots.findIndex(s =>
-                    s.time.getHours() === d.getHours() &&
-                    s.time.toDateString() === d.toDateString()
-                );
-                if (hourIndex !== -1) {
-                    slots[hourIndex].values.push(r.occupancy_percent);
-                }
-            });
-
-            // Calculate averages and build chart data
-            const labels = slots.map(s => s.label);
-            const values = slots.map(s => {
-                if (!s.isOpen) return null; // Closed hours
-                if (s.values.length === 0) return null; // No data
-                return Math.round(s.values.reduce((a, b) => a + b, 0) / s.values.length * 10) / 10;
-            });
-
-            // Build closed period annotations
-            const closedAnnotations = [];
-            let closedStart = null;
-
-            slots.forEach((slot, idx) => {
-                if (!slot.isOpen) {
-                    if (closedStart === null) closedStart = idx;
-                } else {
-                    if (closedStart !== null) {
-                        closedAnnotations.push({
-                            type: 'box',
-                            xMin: closedStart - 0.5,
-                            xMax: idx - 0.5,
-                            backgroundColor: 'rgba(231, 76, 60, 0.15)',
-                            borderColor: 'rgba(231, 76, 60, 0.4)',
-                            borderWidth: 1,
-                            label: {
-                                display: true,
-                                content: 'Geschlossen',
-                                color: '#e74c3c',
-                                font: { size: 11, weight: 'bold' },
-                                position: 'center'
-                            }
-                        });
-                        closedStart = null;
-                    }
-                }
-            });
-
-            // Handle if last slots are closed
-            if (closedStart !== null) {
-                closedAnnotations.push({
-                    type: 'box',
-                    xMin: closedStart - 0.5,
-                    xMax: slots.length - 0.5,
-                    backgroundColor: 'rgba(231, 76, 60, 0.15)',
-                    borderColor: 'rgba(231, 76, 60, 0.4)',
-                    borderWidth: 1,
-                    label: {
-                        display: true,
-                        content: 'Geschlossen',
-                        color: '#e74c3c',
-                        font: { size: 11, weight: 'bold' },
-                        position: 'center'
-                    }
-                });
-            }
-
-            // Check if we have any open-hours data
-            const hasData = values.some(v => v !== null);
-            if (!hasData) {
-                container.innerHTML = '<div class="loading">Sammle Daten... (noch keine Daten während Öffnungszeiten)</div>';
+            // Need at least 2 data points
+            if (filteredData.length < 2) {
+                container.innerHTML = '<div class="loading">Sammle Daten... (mind. 2 Messpunkte nötig)</div>';
                 return;
             }
+
+            // Build data arrays
+            const labels = [];
+            const values = [];
+            const closedAnnotations = [];
+
+            // Track closed periods by looking at time gaps
+            let lastOpenTime = null;
+            let lastOpenIndex = null;
+
+            filteredData.forEach((r, idx) => {
+                const d = new Date(r.timestamp);
+                const label = d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+                const occupancy = r.occupancy_percent;
+                const isOpen = isTimeOpen(d);
+
+                labels.push(label);
+
+                // If this point is during closed hours or negative, show null
+                if (!isOpen || occupancy < 0) {
+                    values.push(null);
+                } else {
+                    values.push(occupancy);
+
+                    // Check for gap since last open data point (closed period in between)
+                    if (lastOpenTime !== null) {
+                        const gapHours = (d - lastOpenTime) / (1000 * 60 * 60);
+                        // If gap > 2 hours, there was likely a closed period
+                        if (gapHours > 2) {
+                            closedAnnotations.push({
+                                type: 'box',
+                                xMin: lastOpenIndex + 0.5,
+                                xMax: idx - 0.5,
+                                backgroundColor: 'rgba(231, 76, 60, 0.15)',
+                                borderColor: 'rgba(231, 76, 60, 0.4)',
+                                borderWidth: 1,
+                                label: {
+                                    display: true,
+                                    content: 'Geschlossen',
+                                    color: '#e74c3c',
+                                    font: { size: 11, weight: 'bold' },
+                                    position: 'center'
+                                }
+                            });
+                        }
+                    }
+                    lastOpenTime = d;
+                    lastOpenIndex = idx;
+                }
+            });
 
             const ctx = document.getElementById('historyChart').getContext('2d');
             new Chart(ctx, {
@@ -897,7 +872,7 @@
                         tension: 0.3,
                         pointRadius: 4,
                         pointBackgroundColor: CHART_COLOR,
-                        spanGaps: true // Connect data points across gaps
+                        spanGaps: false // Don't connect across closed periods
                     }]
                 },
                 options: {
@@ -918,14 +893,7 @@
                         },
                         x: {
                             grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: {
-                                color: '#888',
-                                maxRotation: 45,
-                                callback: function(val, index) {
-                                    // Show every 3rd label to avoid crowding
-                                    return index % 3 === 0 ? this.getLabelForValue(val) : '';
-                                }
-                            }
+                            ticks: { color: '#888', maxRotation: 45 }
                         }
                     }
                 }
