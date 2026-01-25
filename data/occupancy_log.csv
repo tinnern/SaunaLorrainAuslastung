@@ -212,3 +212,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-01-25T12:24:53.593702+01:00,Sauna rechts,28,40,70.0,Mir si guet bsuecht. | Quite busy
 2026-01-25T12:30:31.884289+01:00,Sauna,44,40,110.0,Prätschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting.
 2026-01-25T12:30:31.884289+01:00,Sauna rechts,28,40,70.0,Mir si guet bsuecht. | Quite busy
+2026-01-25T12:42:44.628994+01:00,Sauna,44,40,110.0,Prätschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting.
+2026-01-25T12:42:44.628994+01:00,Sauna rechts,28,40,70.0,Mir si guet bsuecht. | Quite busy
