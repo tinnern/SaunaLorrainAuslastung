@@ -8,6 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>Sauna Lorrainebad - Auslastung</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <style>
         * {
             margin: 0;
@@ -372,6 +373,28 @@
             margin-top: 10px;
         }
 
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 12px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .sauna-card { padding: 25px; }
@@ -410,6 +433,9 @@
             <h2>Verlauf der letzten 24 Stunden</h2>
             <div class="chart-container">
                 <canvas id="historyChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="legend-item"><span class="legend-color" style="background: rgba(231, 76, 60, 0.2); border: 1px solid rgba(231, 76, 60, 0.4);"></span> Geschlossen</span>
             </div>
         </div>
 
@@ -750,6 +776,21 @@
             });
         }
 
+        function isOpenAt(date) {
+            const dayName = WEEKDAYS[date.getDay() === 0 ? 6 : date.getDay() - 1];
+            const hours = OPENING_HOURS[dayName];
+            if (!hours) return false;
+
+            const [openHour, closeHour] = hours;
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+
+            if (hour < openHour) return false;
+            if (hour > closeHour) return false;
+            if (hour === closeHour && minute > 30) return false;
+            return true;
+        }
+
         function renderHistoryChart(records) {
             const container = document.getElementById('historyChart').parentElement;
 
@@ -767,12 +808,73 @@
                 return;
             }
 
-            // Use simple labels instead of time scale to avoid rendering issues
-            const labels = filteredData.map(r => {
+            // Process data: mark closed periods, filter invalid values
+            const labels = [];
+            const values = [];
+            const pointColors = [];
+            const closedAnnotations = [];
+
+            let closedStart = null;
+
+            filteredData.forEach((r, idx) => {
                 const d = new Date(r.timestamp);
-                return d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+                const label = d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+                const isOpen = isOpenAt(d);
+                const occupancy = r.occupancy_percent;
+
+                labels.push(label);
+
+                // Handle closed periods or invalid values
+                if (!isOpen || occupancy < 0) {
+                    values.push(null); // Don't plot closed/invalid points
+                    pointColors.push('transparent');
+
+                    // Track closed period start
+                    if (closedStart === null) {
+                        closedStart = idx;
+                    }
+                } else {
+                    values.push(occupancy);
+                    pointColors.push(CHART_COLOR);
+
+                    // End of closed period
+                    if (closedStart !== null) {
+                        closedAnnotations.push({
+                            type: 'box',
+                            xMin: closedStart - 0.5,
+                            xMax: idx - 0.5,
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            borderColor: 'rgba(231, 76, 60, 0.3)',
+                            borderWidth: 1,
+                            label: {
+                                display: true,
+                                content: 'Geschlossen',
+                                color: '#e74c3c',
+                                font: { size: 10 }
+                            }
+                        });
+                        closedStart = null;
+                    }
+                }
             });
-            const values = filteredData.map(r => r.occupancy_percent);
+
+            // Handle if chart ends during closed period
+            if (closedStart !== null) {
+                closedAnnotations.push({
+                    type: 'box',
+                    xMin: closedStart - 0.5,
+                    xMax: labels.length - 0.5,
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderColor: 'rgba(231, 76, 60, 0.3)',
+                    borderWidth: 1,
+                    label: {
+                        display: true,
+                        content: 'Geschlossen',
+                        color: '#e74c3c',
+                        font: { size: 10 }
+                    }
+                });
+            }
 
             const ctx = document.getElementById('historyChart').getContext('2d');
             new Chart(ctx, {
@@ -787,14 +889,18 @@
                         fill: false,
                         tension: 0.3,
                         pointRadius: 4,
-                        pointBackgroundColor: CHART_COLOR
+                        pointBackgroundColor: pointColors,
+                        spanGaps: false // Don't connect lines across closed periods
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        annotation: {
+                            annotations: closedAnnotations
+                        }
                     },
                     scales: {
                         y: {
