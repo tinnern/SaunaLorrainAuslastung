@@ -776,81 +776,80 @@
             });
         }
 
-        function isOpenAt(date) {
+        function isHourOpen(date) {
             const dayName = WEEKDAYS[date.getDay() === 0 ? 6 : date.getDay() - 1];
             const hours = OPENING_HOURS[dayName];
             if (!hours) return false;
 
             const [openHour, closeHour] = hours;
             const hour = date.getHours();
-            const minute = date.getMinutes();
 
-            if (hour < openHour) return false;
-            if (hour > closeHour) return false;
-            if (hour === closeHour && minute > 30) return false;
-            return true;
+            return hour >= openHour && hour <= closeHour;
         }
 
         function renderHistoryChart(records) {
             const container = document.getElementById('historyChart').parentElement;
-
-            // Get last 24 hours of data, only for "Sauna", sorted by time
             const now = new Date();
-            const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
 
-            const filteredData = records
-                .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo)
-                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-            // Need at least 2 data points for a meaningful chart
-            if (filteredData.length < 2) {
-                container.innerHTML = '<div class="loading">Sammle Daten... (mind. 2 Messpunkte nötig)</div>';
-                return;
+            // Create hourly slots for last 24 hours
+            const slots = [];
+            for (let i = 23; i >= 0; i--) {
+                const slotTime = new Date(now);
+                slotTime.setHours(now.getHours() - i, 0, 0, 0);
+                slots.push({
+                    time: slotTime,
+                    label: slotTime.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' }),
+                    isOpen: isHourOpen(slotTime),
+                    values: []
+                });
             }
 
-            // Process data: mark closed periods, filter invalid values
-            const labels = [];
-            const values = [];
-            const pointColors = [];
-            const closedAnnotations = [];
+            // Map data to slots
+            const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
+            const filteredData = records
+                .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo && r.occupancy_percent >= 0);
 
+            filteredData.forEach(r => {
+                const d = new Date(r.timestamp);
+                const hourIndex = slots.findIndex(s =>
+                    s.time.getHours() === d.getHours() &&
+                    s.time.toDateString() === d.toDateString()
+                );
+                if (hourIndex !== -1) {
+                    slots[hourIndex].values.push(r.occupancy_percent);
+                }
+            });
+
+            // Calculate averages and build chart data
+            const labels = slots.map(s => s.label);
+            const values = slots.map(s => {
+                if (!s.isOpen) return null; // Closed hours
+                if (s.values.length === 0) return null; // No data
+                return Math.round(s.values.reduce((a, b) => a + b, 0) / s.values.length * 10) / 10;
+            });
+
+            // Build closed period annotations
+            const closedAnnotations = [];
             let closedStart = null;
 
-            filteredData.forEach((r, idx) => {
-                const d = new Date(r.timestamp);
-                const label = d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
-                const isOpen = isOpenAt(d);
-                const occupancy = r.occupancy_percent;
-
-                labels.push(label);
-
-                // Handle closed periods or invalid values
-                if (!isOpen || occupancy < 0) {
-                    values.push(null); // Don't plot closed/invalid points
-                    pointColors.push('transparent');
-
-                    // Track closed period start
-                    if (closedStart === null) {
-                        closedStart = idx;
-                    }
+            slots.forEach((slot, idx) => {
+                if (!slot.isOpen) {
+                    if (closedStart === null) closedStart = idx;
                 } else {
-                    values.push(occupancy);
-                    pointColors.push(CHART_COLOR);
-
-                    // End of closed period
                     if (closedStart !== null) {
                         closedAnnotations.push({
                             type: 'box',
                             xMin: closedStart - 0.5,
                             xMax: idx - 0.5,
-                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                            borderColor: 'rgba(231, 76, 60, 0.3)',
+                            backgroundColor: 'rgba(231, 76, 60, 0.15)',
+                            borderColor: 'rgba(231, 76, 60, 0.4)',
                             borderWidth: 1,
                             label: {
                                 display: true,
                                 content: 'Geschlossen',
                                 color: '#e74c3c',
-                                font: { size: 10 }
+                                font: { size: 11, weight: 'bold' },
+                                position: 'center'
                             }
                         });
                         closedStart = null;
@@ -858,22 +857,30 @@
                 }
             });
 
-            // Handle if chart ends during closed period
+            // Handle if last slots are closed
             if (closedStart !== null) {
                 closedAnnotations.push({
                     type: 'box',
                     xMin: closedStart - 0.5,
-                    xMax: labels.length - 0.5,
-                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                    borderColor: 'rgba(231, 76, 60, 0.3)',
+                    xMax: slots.length - 0.5,
+                    backgroundColor: 'rgba(231, 76, 60, 0.15)',
+                    borderColor: 'rgba(231, 76, 60, 0.4)',
                     borderWidth: 1,
                     label: {
                         display: true,
                         content: 'Geschlossen',
                         color: '#e74c3c',
-                        font: { size: 10 }
+                        font: { size: 11, weight: 'bold' },
+                        position: 'center'
                     }
                 });
+            }
+
+            // Check if we have any open-hours data
+            const hasData = values.some(v => v !== null);
+            if (!hasData) {
+                container.innerHTML = '<div class="loading">Sammle Daten... (noch keine Daten während Öffnungszeiten)</div>';
+                return;
             }
 
             const ctx = document.getElementById('historyChart').getContext('2d');
@@ -889,8 +896,8 @@
                         fill: false,
                         tension: 0.3,
                         pointRadius: 4,
-                        pointBackgroundColor: pointColors,
-                        spanGaps: false // Don't connect lines across closed periods
+                        pointBackgroundColor: CHART_COLOR,
+                        spanGaps: true // Connect data points across gaps
                     }]
                 },
                 options: {
@@ -911,7 +918,14 @@
                         },
                         x: {
                             grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#888', maxRotation: 45 }
+                            ticks: {
+                                color: '#888',
+                                maxRotation: 45,
+                                callback: function(val, index) {
+                                    // Show every 3rd label to avoid crowding
+                                    return index % 3 === 0 ? this.getLabelForValue(val) : '';
+                                }
+                            }
                         }
                     }
                 }
