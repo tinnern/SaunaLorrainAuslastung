@@ -273,11 +273,111 @@
             color: #888;
         }
 
+        /* Weather styles */
+        .weather-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .weather-temp {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .weather-desc {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        .weather-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Weather correlation section */
+        .correlation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .correlation-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .correlation-card h3 {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .correlation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .correlation-item:last-child {
+            border-bottom: none;
+        }
+
+        .correlation-label {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .correlation-value {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .correlation-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .correlation-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .correlation-insight {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #f39c12;
+            font-size: 0.85rem;
+            color: #ddd;
+        }
+
+        .data-count {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .sauna-card { padding: 25px; }
             .occupancy-circle { width: 120px; height: 120px; }
             .seats { font-size: 1.3rem; }
+            .correlation-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -286,6 +386,11 @@
         <header>
             <h1>Sauna Lorrainebad</h1>
             <p class="subtitle">Aktuelle Auslastung & Statistiken</p>
+            <div id="weather-badge" class="weather-badge" style="display: none;">
+                <span class="weather-icon" id="weather-icon"></span>
+                <span class="weather-temp" id="weather-temp"></span>
+                <span class="weather-desc" id="weather-desc"></span>
+            </div>
         </header>
 
         <div id="current-status" class="current-status">
@@ -312,6 +417,13 @@
             <h2>Beste Zeiten <span id="best-times-day"></span></h2>
             <div id="best-times" class="stats-grid">
                 <div class="loading">Berechne...</div>
+            </div>
+        </div>
+
+        <div class="section" id="weather-section" style="display: none;">
+            <h2>Wetter & Auslastung</h2>
+            <div id="weather-correlation" class="correlation-grid">
+                <div class="loading">Sammle Wetterdaten...</div>
             </div>
         </div>
 
@@ -459,6 +571,11 @@
 
             document.getElementById('last-update').textContent =
                 `Letzte Aktualisierung: ${new Date(data.timestamp).toLocaleString('de-CH')}`;
+
+            // Render weather badge if available
+            if (data.weather) {
+                renderWeatherBadge(data.weather);
+            }
         }
 
         function getCurrentWeekday() {
@@ -695,6 +812,138 @@
             });
         }
 
+        function getWeatherIcon(code, isSunny, isRainy) {
+            if (isRainy) return '🌧️';
+            if (isSunny) return '☀️';
+            if (code === 0 || code === 1) return '☀️';
+            if (code === 2) return '⛅';
+            if (code === 3) return '☁️';
+            if (code >= 45 && code <= 48) return '🌫️';
+            if (code >= 51 && code <= 67) return '🌧️';
+            if (code >= 71 && code <= 77) return '🌨️';
+            if (code >= 80 && code <= 82) return '🌦️';
+            if (code >= 85 && code <= 86) return '🌨️';
+            if (code >= 95) return '⛈️';
+            return '🌡️';
+        }
+
+        function renderWeatherBadge(weather) {
+            if (!weather) return;
+
+            const badge = document.getElementById('weather-badge');
+            const icon = document.getElementById('weather-icon');
+            const temp = document.getElementById('weather-temp');
+            const desc = document.getElementById('weather-desc');
+
+            icon.textContent = getWeatherIcon(weather.weather_code, weather.is_sunny, weather.is_rainy);
+            temp.textContent = `${Math.round(weather.temperature)}°C`;
+            // Show only the German part of the description
+            const germanDesc = weather.weather_description.split(' | ')[0];
+            desc.textContent = germanDesc;
+            badge.style.display = 'inline-flex';
+        }
+
+        function renderWeatherCorrelation(stats) {
+            const section = document.getElementById('weather-section');
+            const container = document.getElementById('weather-correlation');
+
+            if (!stats || stats.total_records < 5) {
+                container.innerHTML = '<div class="loading">Noch nicht genug Wetterdaten gesammelt (mindestens 5 Messpunkte nötig)</div>';
+                return;
+            }
+
+            section.style.display = 'block';
+            const overallAvg = stats.overall_avg;
+
+            let html = '';
+
+            // Temperature correlation
+            if (Object.keys(stats.by_temperature).length > 0) {
+                html += `
+                    <div class="correlation-card">
+                        <h3>Nach Temperatur</h3>
+                        ${Object.entries(stats.by_temperature).map(([bucket, data]) => {
+                            const diff = data.avg - overallAvg;
+                            const diffText = diff > 0 ? `+${diff.toFixed(0)}%` : `${diff.toFixed(0)}%`;
+                            const diffColor = diff > 5 ? '#e74c3c' : diff < -5 ? '#2ecc71' : '#888';
+                            return `
+                                <div class="correlation-item">
+                                    <span class="correlation-label">${bucket}</span>
+                                    <span class="correlation-value" style="color: ${getColor(data.avg)}">${data.avg.toFixed(0)}%</span>
+                                </div>
+                                <div class="correlation-bar">
+                                    <div class="correlation-bar-fill" style="width: ${Math.min(data.avg, 100)}%; background: ${getColor(data.avg)}"></div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // Weather conditions
+            if (Object.keys(stats.by_condition).length > 0) {
+                const conditionLabels = {
+                    'rainy': '🌧️ Regen',
+                    'sunny': '☀️ Sonnig',
+                    'cloudy': '☁️ Bewölkt'
+                };
+                html += `
+                    <div class="correlation-card">
+                        <h3>Nach Wetterlage</h3>
+                        ${Object.entries(stats.by_condition).map(([condition, data]) => {
+                            const diff = data.avg - overallAvg;
+                            return `
+                                <div class="correlation-item">
+                                    <span class="correlation-label">${conditionLabels[condition] || condition}</span>
+                                    <span class="correlation-value" style="color: ${getColor(data.avg)}">${data.avg.toFixed(0)}%</span>
+                                </div>
+                                <div class="correlation-bar">
+                                    <div class="correlation-bar-fill" style="width: ${Math.min(data.avg, 100)}%; background: ${getColor(data.avg)}"></div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // Generate insight
+            let insight = '';
+            const tempData = stats.by_temperature;
+            const condData = stats.by_condition;
+
+            // Find temperature with highest occupancy
+            let maxTempBucket = null;
+            let maxTempAvg = 0;
+            for (const [bucket, data] of Object.entries(tempData)) {
+                if (data.avg > maxTempAvg) {
+                    maxTempAvg = data.avg;
+                    maxTempBucket = bucket;
+                }
+            }
+
+            // Check rain effect
+            if (condData.rainy && condData.sunny) {
+                const rainDiff = condData.rainy.avg - condData.sunny.avg;
+                if (rainDiff > 10) {
+                    insight = `Bei Regenwetter ist die Sauna durchschnittlich ${rainDiff.toFixed(0)}% voller als bei Sonnenschein.`;
+                } else if (rainDiff < -10) {
+                    insight = `Bei Sonnenschein ist die Sauna durchschnittlich ${Math.abs(rainDiff).toFixed(0)}% voller als bei Regen.`;
+                }
+            }
+
+            if (!insight && maxTempBucket) {
+                insight = `Die höchste Auslastung gibt es bei Temperaturen von ${maxTempBucket}.`;
+            }
+
+            if (insight) {
+                html += `<div class="correlation-insight">${insight}</div>`;
+            }
+
+            html += `<div class="data-count">Basierend auf ${stats.total_records} Messungen</div>`;
+
+            container.innerHTML = html;
+        }
+
         function renderBestTimes(stats) {
             const container = document.getElementById('best-times');
             const dayLabel = document.getElementById('best-times-day');
@@ -769,6 +1018,13 @@
                 if (historyRes.ok) {
                     const records = await historyRes.json();
                     renderHistoryChart(records);
+                }
+
+                // Load weather correlation statistics
+                const weatherRes = await fetch('data/weather_stats.json');
+                if (weatherRes.ok) {
+                    const weatherStats = await weatherRes.json();
+                    renderWeatherCorrelation(weatherStats);
                 }
 
             } catch (error) {

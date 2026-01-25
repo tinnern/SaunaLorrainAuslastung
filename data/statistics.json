@@ -1,213 +1,31 @@
 {
   "by_hour": {
-    "0": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 7
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 7
-      }
-    },
-    "1": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 4
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 4
-      }
-    },
-    "2": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 4
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 4
-      }
-    },
-    "3": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 5
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 5
-      }
-    },
-    "4": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 4
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 4
-      }
-    },
-    "5": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 5
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 5
-      }
-    },
-    "6": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 5
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 5
-      }
-    },
-    "7": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 5
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 5
-      }
-    },
-    "8": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 7
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 7
-      }
-    },
-    "9": {
-      "Sauna": {
-        "avg": 43.8,
-        "min": -2.5,
-        "max": 77.5,
-        "count": 6
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 6
-      }
-    },
-    "10": {
-      "Sauna": {
-        "avg": 102.5,
-        "min": 77.5,
-        "max": 122.5,
-        "count": 6
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 6
-      }
-    },
-    "11": {
-      "Sauna": {
-        "avg": 122.5,
-        "min": 122.5,
-        "max": 122.5,
-        "count": 6
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 6
-      }
-    },
-    "12": {
-      "Sauna": {
-        "avg": 113.6,
-        "min": 97.5,
-        "max": 122.5,
-        "count": 7
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 7
-      }
-    },
-    "13": {
-      "Sauna": {
-        "avg": 93.0,
-        "min": 82.5,
-        "max": 100.0,
-        "count": 5
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 5
-      }
-    },
+    "0": {},
+    "1": {},
+    "2": {},
+    "3": {},
+    "4": {},
+    "5": {},
+    "6": {},
+    "7": {},
+    "8": {},
+    "9": {},
+    "10": {},
+    "11": {},
+    "12": {},
+    "13": {},
     "14": {
       "Sauna": {
-        "avg": 108.0,
-        "min": 100.0,
+        "avg": 110.0,
+        "min": 110.0,
         "max": 110.0,
-        "count": 5
+        "count": 1
       },
       "Sauna rechts": {
         "avg": 70.0,
         "min": 70.0,
         "max": 70.0,
-        "count": 5
+        "count": 1
       }
     },
     "15": {},
@@ -242,74 +60,22 @@
     },
     "19": {
       "Sauna": {
-        "avg": 91.2,
+        "avg": 90.0,
         "min": 85.0,
-        "max": 95.0,
-        "count": 6
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 6
-      }
-    },
-    "20": {
-      "Sauna": {
-        "avg": 87.1,
-        "min": 67.5,
         "max": 92.5,
-        "count": 7
+        "count": 4
       },
       "Sauna rechts": {
         "avg": 70.0,
         "min": 70.0,
         "max": 70.0,
-        "count": 7
+        "count": 4
       }
     },
-    "21": {
-      "Sauna": {
-        "avg": 42.5,
-        "min": 30.0,
-        "max": 67.5,
-        "count": 6
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 6
-      }
-    },
-    "22": {
-      "Sauna": {
-        "avg": 6.8,
-        "min": -2.5,
-        "max": 30.0,
-        "count": 7
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 7
-      }
-    },
-    "23": {
-      "Sauna": {
-        "avg": -2.5,
-        "min": -2.5,
-        "max": -2.5,
-        "count": 6
-      },
-      "Sauna rechts": {
-        "avg": 70.0,
-        "min": 70.0,
-        "max": 70.0,
-        "count": 6
-      }
-    }
+    "20": {},
+    "21": {},
+    "22": {},
+    "23": {}
   },
   "by_weekday": {
     "Monday": {
@@ -490,284 +256,50 @@
       },
       "19": {
         "Sauna": {
-          "avg": 91.2,
+          "avg": 90.0,
           "min": 85.0,
-          "max": 95.0,
-          "count": 6
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 6
-        }
-      },
-      "20": {
-        "Sauna": {
-          "avg": 87.1,
-          "min": 67.5,
           "max": 92.5,
-          "count": 7
+          "count": 4
         },
         "Sauna rechts": {
           "avg": 70.0,
           "min": 70.0,
           "max": 70.0,
-          "count": 7
+          "count": 4
         }
       },
-      "21": {
-        "Sauna": {
-          "avg": 42.5,
-          "min": 30.0,
-          "max": 67.5,
-          "count": 6
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 6
-        }
-      },
-      "22": {
-        "Sauna": {
-          "avg": 6.8,
-          "min": -2.5,
-          "max": 30.0,
-          "count": 7
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 7
-        }
-      },
-      "23": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 6
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 6
-        }
-      }
+      "20": {},
+      "21": {},
+      "22": {},
+      "23": {}
     },
     "Sunday": {
-      "0": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 7
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 7
-        }
-      },
-      "1": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 4
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 4
-        }
-      },
-      "2": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 4
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 4
-        }
-      },
-      "3": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 5
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 5
-        }
-      },
-      "4": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 4
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 4
-        }
-      },
-      "5": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 5
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 5
-        }
-      },
-      "6": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 5
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 5
-        }
-      },
-      "7": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 5
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 5
-        }
-      },
-      "8": {
-        "Sauna": {
-          "avg": -2.5,
-          "min": -2.5,
-          "max": -2.5,
-          "count": 7
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 7
-        }
-      },
-      "9": {
-        "Sauna": {
-          "avg": 43.8,
-          "min": -2.5,
-          "max": 77.5,
-          "count": 6
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 6
-        }
-      },
-      "10": {
-        "Sauna": {
-          "avg": 102.5,
-          "min": 77.5,
-          "max": 122.5,
-          "count": 6
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 6
-        }
-      },
-      "11": {
-        "Sauna": {
-          "avg": 122.5,
-          "min": 122.5,
-          "max": 122.5,
-          "count": 6
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 6
-        }
-      },
-      "12": {
-        "Sauna": {
-          "avg": 113.6,
-          "min": 97.5,
-          "max": 122.5,
-          "count": 7
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 7
-        }
-      },
-      "13": {
-        "Sauna": {
-          "avg": 93.0,
-          "min": 82.5,
-          "max": 100.0,
-          "count": 5
-        },
-        "Sauna rechts": {
-          "avg": 70.0,
-          "min": 70.0,
-          "max": 70.0,
-          "count": 5
-        }
-      },
+      "0": {},
+      "1": {},
+      "2": {},
+      "3": {},
+      "4": {},
+      "5": {},
+      "6": {},
+      "7": {},
+      "8": {},
+      "9": {},
+      "10": {},
+      "11": {},
+      "12": {},
+      "13": {},
       "14": {
         "Sauna": {
-          "avg": 108.0,
-          "min": 100.0,
+          "avg": 110.0,
+          "min": 110.0,
           "max": 110.0,
-          "count": 5
+          "count": 1
         },
         "Sauna rechts": {
           "avg": 70.0,
           "min": 70.0,
           "max": 70.0,
-          "count": 5
+          "count": 1
         }
       },
       "15": {},
