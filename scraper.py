@@ -232,16 +232,20 @@ def calculate_weather_statistics(records):
         temp = weather.get("temperature")
 
         if temp is not None:
-            if temp < 5:
-                temp_buckets["< 5°C"].append(occupancy)
+            if temp < -5:
+                temp_buckets["< -5°C"].append(occupancy)
+            elif temp < 0:
+                temp_buckets["-5–0°C"].append(occupancy)
+            elif temp < 5:
+                temp_buckets["0–5°C"].append(occupancy)
             elif temp < 10:
-                temp_buckets["5-10°C"].append(occupancy)
+                temp_buckets["5–10°C"].append(occupancy)
             elif temp < 15:
-                temp_buckets["10-15°C"].append(occupancy)
+                temp_buckets["10–15°C"].append(occupancy)
             elif temp < 20:
-                temp_buckets["15-20°C"].append(occupancy)
+                temp_buckets["15–20°C"].append(occupancy)
             elif temp < 25:
-                temp_buckets["20-25°C"].append(occupancy)
+                temp_buckets["20–25°C"].append(occupancy)
             else:
                 temp_buckets["> 25°C"].append(occupancy)
 
@@ -288,7 +292,7 @@ def calculate_weather_statistics(records):
     }
 
     # Temperature stats (ordered)
-    temp_order = ["< 5°C", "5-10°C", "10-15°C", "15-20°C", "20-25°C", "> 25°C"]
+    temp_order = ["< -5°C", "-5–0°C", "0–5°C", "5–10°C", "10–15°C", "15–20°C", "20–25°C", "> 25°C"]
     for bucket in temp_order:
         if temp_buckets[bucket]:
             stats["by_temperature"][bucket] = calc_stats(temp_buckets[bucket])
