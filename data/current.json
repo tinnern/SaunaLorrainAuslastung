@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-26T12:27:54.360183+01:00",
+  "timestamp": "2026-01-26T12:30:30.482279+01:00",
   "saunas": [
     {
       "name": "Sauna",
@@ -17,9 +17,9 @@
     }
   ],
   "weather": {
-    "temperature": 5.5,
-    "apparent_temperature": 1.3,
-    "humidity": 74,
+    "temperature": 5.7,
+    "apparent_temperature": 1.5,
+    "humidity": 72,
     "precipitation": 0.0,
     "weather_code": 2,
     "weather_description": "Teilweise bew\u00f6lkt | Partly cloudy",
