@@ -1,12 +1,12 @@
 {
   "overall_avg": 46.8,
-  "total_records": 115,
+  "total_records": 116,
   "by_temperature": {
     "< 5\u00b0C": {
       "avg": 46.8,
       "min": -2.5,
       "max": 157.5,
-      "count": 115
+      "count": 116
     }
   },
   "by_condition": {
@@ -20,7 +20,7 @@
       "avg": 46.8,
       "min": -2.5,
       "max": 157.5,
-      "count": 115
+      "count": 116
     }
   },
   "by_humidity": {
@@ -28,7 +28,7 @@
       "avg": 46.8,
       "min": -2.5,
       "max": 157.5,
-      "count": 115
+      "count": 116
     }
   }
 }
