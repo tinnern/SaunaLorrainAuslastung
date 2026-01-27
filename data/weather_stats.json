@@ -1,12 +1,12 @@
 {
-  "overall_avg": 46.0,
-  "total_records": 215,
+  "overall_avg": 45.8,
+  "total_records": 216,
   "by_temperature": {
     "-5\u20130\u00b0C": {
-      "avg": 5.8,
+      "avg": 5.6,
       "min": -2.5,
       "max": 100.0,
-      "count": 37
+      "count": 38
     },
     "0\u20135\u00b0C": {
       "avg": 52.0,
@@ -49,10 +49,10 @@
       "count": 21
     },
     "> 70%": {
-      "avg": 43.0,
+      "avg": 42.7,
       "min": -2.5,
       "max": 157.5,
-      "count": 194
+      "count": 195
     }
   }
 }
