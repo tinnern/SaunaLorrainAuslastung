@@ -578,19 +578,37 @@
 
             const status = getOpeningStatus();
             const statusClass = status.open ? 'open' : 'closed';
+            const isClosed = !status.open || sauna.current_seats < 0;
+
+            let occupancyContent;
+            if (isClosed) {
+                occupancyContent = `
+                    <div class="occupancy-circle">
+                        ${createOccupancyCircle(0)}
+                    </div>
+                    <div class="occupancy-info">
+                        <div class="seats">Geschlossen</div>
+                        <div class="message">${status.text}</div>
+                    </div>
+                `;
+            } else {
+                occupancyContent = `
+                    <div class="occupancy-circle">
+                        ${createOccupancyCircle(sauna.occupancy_percent)}
+                    </div>
+                    <div class="occupancy-info">
+                        <div class="seats">${sauna.current_seats} / ${sauna.max_seats} Plätze</div>
+                        <div class="message">${sauna.capacity_message}</div>
+                    </div>
+                `;
+            }
 
             container.innerHTML = `
                 <div class="sauna-card">
                     <div class="sauna-name">Aktuelle Auslastung</div>
                     <div class="opening-status ${statusClass}">${status.text}</div>
                     <div class="occupancy-display">
-                        <div class="occupancy-circle">
-                            ${createOccupancyCircle(sauna.occupancy_percent)}
-                        </div>
-                        <div class="occupancy-info">
-                            <div class="seats">${sauna.current_seats} / ${sauna.max_seats} Plätze</div>
-                            <div class="message">${sauna.capacity_message}</div>
-                        </div>
+                        ${occupancyContent}
                     </div>
                 </div>
             `;
@@ -813,10 +831,7 @@
             const values = [];
             const closedAnnotations = [];
 
-            // Track closed periods by looking at time gaps
-            let lastOpenTime = null;
-            let lastOpenIndex = null;
-
+            // First pass: build labels and values arrays
             filteredData.forEach((r, idx) => {
                 const d = new Date(r.timestamp);
                 const label = d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
@@ -830,74 +845,103 @@
                     values.push(null);
                 } else {
                     values.push(occupancy);
-
-                    // Check for gap since last open data point (closed period in between)
-                    if (lastOpenTime !== null) {
-                        const gapHours = (d - lastOpenTime) / (1000 * 60 * 60);
-                        // If gap > 2 hours, there was likely a closed period
-                        if (gapHours > 2) {
-                            closedAnnotations.push({
-                                type: 'box',
-                                xMin: lastOpenIndex + 0.5,
-                                xMax: idx - 0.5,
-                                backgroundColor: 'rgba(231, 76, 60, 0.15)',
-                                borderColor: 'rgba(231, 76, 60, 0.4)',
-                                borderWidth: 1,
-                                label: {
-                                    display: true,
-                                    content: 'Geschlossen',
-                                    color: '#e74c3c',
-                                    font: { size: 11, weight: 'bold' },
-                                    position: 'center'
-                                }
-                            });
-                        }
-                    }
-                    lastOpenTime = d;
-                    lastOpenIndex = idx;
                 }
             });
 
-            const ctx = document.getElementById('historyChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Auslastung',
-                        data: values,
-                        borderColor: CHART_COLOR,
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.3,
-                        pointRadius: 4,
-                        pointBackgroundColor: CHART_COLOR,
-                        spanGaps: false // Don't connect across closed periods
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        annotation: {
-                            annotations: closedAnnotations
+            // Check if we have any valid (non-null) data points
+            const hasValidData = values.some(v => v !== null);
+
+            // Second pass: find closed periods (consecutive nulls) and create annotations
+            function addClosedAnnotation(startIdx, endIdx) {
+                // Only add if at least 2 points in the closed period
+                if (endIdx - startIdx >= 1) {
+                    closedAnnotations.push({
+                        type: 'box',
+                        xMin: startIdx - 0.5,
+                        xMax: endIdx + 0.5,
+                        backgroundColor: 'rgba(231, 76, 60, 0.15)',
+                        borderColor: 'rgba(231, 76, 60, 0.4)',
+                        borderWidth: 1,
+                        label: {
+                            display: true,
+                            content: 'Geschlossen',
+                            color: '#e74c3c',
+                            font: { size: 11, weight: 'bold' },
+                            position: 'center'
                         }
+                    });
+                }
+            }
+
+            let closedStart = null;
+            for (let i = 0; i < values.length; i++) {
+                if (values[i] === null) {
+                    if (closedStart === null) {
+                        closedStart = i;
+                    }
+                } else {
+                    if (closedStart !== null) {
+                        addClosedAnnotation(closedStart, i - 1);
+                        closedStart = null;
+                    }
+                }
+            }
+            // Handle trailing closed period (data ends while still closed)
+            if (closedStart !== null) {
+                addClosedAnnotation(closedStart, values.length - 1);
+            }
+
+            // If all data is during closed hours, show a message instead
+            if (!hasValidData) {
+                container.innerHTML = '<div class="loading">Sauna ist aktuell geschlossen - Daten werden angezeigt sobald geöffnet</div>';
+                return;
+            }
+
+            try {
+                const ctx = document.getElementById('historyChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Auslastung',
+                            data: values,
+                            borderColor: CHART_COLOR,
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: CHART_COLOR,
+                            spanGaps: false // Don't connect across closed periods
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 160,
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#888', callback: v => v + '%' }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            annotation: {
+                                annotations: closedAnnotations
+                            }
                         },
-                        x: {
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#888', maxRotation: 45 }
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 160,
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#888', callback: v => v + '%' }
+                            },
+                            x: {
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#888', maxRotation: 45 }
+                            }
                         }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.error('Error rendering history chart:', error);
+                container.innerHTML = '<div class="loading">Fehler beim Laden des Diagramms</div>';
+            }
         }
 
         function getWeatherIcon(code, isSunny, isRainy) {
