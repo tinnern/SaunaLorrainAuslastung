@@ -268,16 +268,16 @@
     },
     "19": {
       "Sauna": {
-        "avg": 83.7,
+        "avg": 80.6,
         "min": -2.5,
         "max": 120.0,
-        "count": 27
+        "count": 28
       },
       "Sauna rechts": {
         "avg": 70.0,
         "min": 70.0,
         "max": 70.0,
-        "count": 27
+        "count": 28
       }
     },
     "20": {
@@ -1286,13 +1286,13 @@
           "avg": -2.5,
           "min": -2.5,
           "max": -2.5,
-          "count": 5
+          "count": 6
         },
         "Sauna rechts": {
           "avg": 70.0,
           "min": 70.0,
           "max": 70.0,
-          "count": 5
+          "count": 6
         }
       },
       "20": {},
