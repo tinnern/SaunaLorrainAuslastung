@@ -1283,3 +1283,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-01-29T16:00:43.195203+01:00,Sauna,26,40,65.0,Mir si guet bsuecht. | Quite busy
 2026-01-29T16:08:06.408902+01:00,Sauna rechts,26,40,65.0,Mir si guet bsuecht. | Quite busy
 2026-01-29T16:08:06.408902+01:00,Sauna,26,40,65.0,Mir si guet bsuecht. | Quite busy
+2026-01-29T16:15:23.964535+01:00,Sauna rechts,24,40,60.0,Mir si guet bsuecht. | Quite busy
+2026-01-29T16:15:23.964535+01:00,Sauna,26,40,65.0,Mir si guet bsuecht. | Quite busy
