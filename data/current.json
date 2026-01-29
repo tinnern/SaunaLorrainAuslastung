@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-29T14:33:30.309106+01:00",
+  "timestamp": "2026-01-29T14:45:21.740497+01:00",
   "saunas": [
     {
       "name": "Sauna",
@@ -17,7 +17,7 @@
     }
   ],
   "weather": {
-    "temperature": 5.3,
+    "temperature": 5.4,
     "apparent_temperature": 2.7,
     "humidity": 74,
     "precipitation": 0.0,
