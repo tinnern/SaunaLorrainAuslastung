@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-30T12:00:46.986037+01:00",
+  "timestamp": "2026-01-30T12:15:25.124207+01:00",
   "saunas": [
     {
       "name": "Sauna",
@@ -17,10 +17,10 @@
     }
   ],
   "weather": {
-    "temperature": 2.2,
-    "apparent_temperature": -0.1,
-    "humidity": 94,
-    "precipitation": 0.0,
+    "temperature": 2.4,
+    "apparent_temperature": 0.1,
+    "humidity": 93,
+    "precipitation": 0.1,
     "weather_code": 53,
     "weather_description": "M\u00e4ssiger Nieselregen | Moderate drizzle",
     "cloud_cover": 100,
