@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-30T14:15:22.095517+01:00",
+  "timestamp": "2026-01-30T14:30:33.426066+01:00",
   "saunas": [
     {
       "name": "Sauna",
-      "current_seats": 33,
+      "current_seats": 31,
       "max_seats": 40,
-      "occupancy_percent": 82.5,
+      "occupancy_percent": 77.5,
       "capacity_message": "Mir si guet bsuecht. | Quite busy"
     },
     {
@@ -17,13 +17,13 @@
     }
   ],
   "weather": {
-    "temperature": 3.7,
-    "apparent_temperature": 1.7,
-    "humidity": 90,
+    "temperature": 3.2,
+    "apparent_temperature": 1.2,
+    "humidity": 91,
     "precipitation": 0.1,
-    "weather_code": 61,
-    "weather_description": "Leichter Regen | Slight rain",
-    "cloud_cover": 99,
+    "weather_code": 80,
+    "weather_description": "Leichte Regenschauer | Slight rain showers",
+    "cloud_cover": 91,
     "is_rainy": true,
     "is_sunny": false
   }
