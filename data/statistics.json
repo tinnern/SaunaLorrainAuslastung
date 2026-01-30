@@ -2,16 +2,16 @@
   "by_hour": {
     "0": {
       "Sauna": {
-        "avg": 7.1,
+        "avg": 8.5,
         "min": -2.5,
         "max": 65.0,
-        "count": 42
+        "count": 43
       },
       "Sauna rechts": {
-        "avg": 65.7,
+        "avg": 64.1,
         "min": -2.5,
         "max": 112.5,
-        "count": 42
+        "count": 43
       }
     },
     "1": {
@@ -2034,13 +2034,13 @@
           "avg": -2.5,
           "min": -2.5,
           "max": -2.5,
-          "count": 6
+          "count": 7
         },
         "Sauna": {
           "avg": 65.0,
           "min": 65.0,
           "max": 65.0,
-          "count": 6
+          "count": 7
         }
       },
       "1": {},
