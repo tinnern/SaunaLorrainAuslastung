@@ -1751,3 +1751,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-01-31T13:15:23.413774+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
 2026-01-31T13:30:35.153193+01:00,Sauna,32,40,80.0,Mir si guet bsuecht. | Quite busy
 2026-01-31T13:30:35.153193+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
+2026-01-31T13:45:20.546475+01:00,Sauna,31,40,77.5,Mir si guet bsuecht. | Quite busy
+2026-01-31T13:45:20.546475+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
