@@ -1829,3 +1829,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-01-31T20:15:21.937317+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
 2026-01-31T20:27:02.520694+01:00,Sauna,38,40,95.0,Mir si fasch vou. | Almost full.
 2026-01-31T20:27:02.520694+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
+2026-01-31T20:30:30.816785+01:00,Sauna,38,40,95.0,Mir si fasch vou. | Almost full.
+2026-01-31T20:30:30.816785+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
