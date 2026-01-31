@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-31T17:15:21.857420+01:00",
+  "timestamp": "2026-01-31T17:30:31.487510+01:00",
   "saunas": [
     {
       "name": "Sauna",
@@ -17,9 +17,9 @@
     }
   ],
   "weather": {
-    "temperature": 2.7,
-    "apparent_temperature": 0.3,
-    "humidity": 85,
+    "temperature": 2.4,
+    "apparent_temperature": 0.2,
+    "humidity": 87,
     "precipitation": 0.0,
     "weather_code": 3,
     "weather_description": "Bew\u00f6lkt | Overcast",
