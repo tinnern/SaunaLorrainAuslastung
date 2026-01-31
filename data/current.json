@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-31T05:19:52.700847+01:00",
+  "timestamp": "2026-01-31T05:30:32.197986+01:00",
   "saunas": [
     {
       "name": "Sauna",
@@ -17,9 +17,9 @@
     }
   ],
   "weather": {
-    "temperature": 0.6,
-    "apparent_temperature": -1.9,
-    "humidity": 99,
+    "temperature": 0.5,
+    "apparent_temperature": -2.2,
+    "humidity": 98,
     "precipitation": 0.0,
     "weather_code": 45,
     "weather_description": "Nebel | Fog",
