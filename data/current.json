@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-02-01T03:30:31.203930+01:00",
+  "timestamp": "2026-02-01T03:45:23.613865+01:00",
   "saunas": [
     {
-      "name": "Sauna rechts",
+      "name": "Sauna",
       "current_seats": -1,
       "max_seats": 40,
       "occupancy_percent": -2.5,
       "capacity_message": "Mir hei zue. | Closed."
     },
     {
-      "name": "Sauna",
+      "name": "Sauna rechts",
       "current_seats": -1,
       "max_seats": 40,
       "occupancy_percent": -2.5,
