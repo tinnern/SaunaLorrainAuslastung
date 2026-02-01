@@ -2051,3 +2051,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-02-01T17:00:41.558729+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
 2026-02-01T17:15:20.826346+01:00,Sauna,48,40,120.0,Prätschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting.
 2026-02-01T17:15:20.826346+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
+2026-02-01T17:30:31.994707+01:00,Sauna,39,40,97.5,Mir si fasch vou. | Almost full.
+2026-02-01T17:30:31.994707+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
