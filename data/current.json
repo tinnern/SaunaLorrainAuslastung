@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-01T15:15:21.721431+01:00",
+  "timestamp": "2026-02-01T15:30:31.862337+01:00",
   "saunas": [
     {
       "name": "Sauna",
-      "current_seats": 40,
+      "current_seats": 44,
       "max_seats": 40,
-      "occupancy_percent": 100.0,
-      "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time."
+      "occupancy_percent": 110.0,
+      "capacity_message": "Pr\u00e4tschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting."
     },
     {
       "name": "Sauna rechts",
