@@ -1,12 +1,12 @@
 {
   "overall_avg": 37.8,
-  "total_records": 975,
+  "total_records": 976,
   "by_temperature": {
     "-5\u20130\u00b0C": {
       "avg": 11.6,
       "min": -2.5,
       "max": 100.0,
-      "count": 249
+      "count": 250
     },
     "0\u20135\u00b0C": {
       "avg": 44.7,
@@ -35,10 +35,10 @@
       "count": 52
     },
     "cloudy": {
-      "avg": 35.6,
+      "avg": 35.5,
       "min": -2.5,
       "max": 157.5,
-      "count": 845
+      "count": 846
     }
   },
   "by_humidity": {
@@ -52,7 +52,7 @@
       "avg": 37.0,
       "min": -2.5,
       "max": 157.5,
-      "count": 954
+      "count": 955
     }
   }
 }
