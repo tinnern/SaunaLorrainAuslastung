@@ -48060,5 +48060,43 @@
       "is_rainy": false,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-02-04T10:56:33.255831+01:00",
+    "name": "Sauna",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir hei zue. | Closed.",
+    "weather": {
+      "temperature": 0.3,
+      "apparent_temperature": -2.2,
+      "humidity": 97,
+      "precipitation": 0.0,
+      "weather_code": 45,
+      "weather_description": "Nebel | Fog",
+      "cloud_cover": 100,
+      "is_rainy": false,
+      "is_sunny": false
+    }
+  },
+  {
+    "timestamp": "2026-02-04T10:56:33.255831+01:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir hei zue. | Closed.",
+    "weather": {
+      "temperature": 0.3,
+      "apparent_temperature": -2.2,
+      "humidity": 97,
+      "precipitation": 0.0,
+      "weather_code": 45,
+      "weather_description": "Nebel | Fog",
+      "cloud_cover": 100,
+      "is_rainy": false,
+      "is_sunny": false
+    }
   }
 ]
