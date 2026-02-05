@@ -52658,5 +52658,21 @@
       "is_rainy": false,
       "is_sunny": true
     }
+  },
+  {
+    "timestamp": "2026-02-05T11:03:57.889905+01:00",
+    "name": "Sauna",
+    "current_seats": 7,
+    "max_seats": 40,
+    "occupancy_percent": 17.5,
+    "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
+  },
+  {
+    "timestamp": "2026-02-05T11:03:57.889905+01:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir hei zue. | Closed."
   }
 ]
