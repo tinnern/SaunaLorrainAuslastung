@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-05T16:15:24.753214+01:00",
+  "timestamp": "2026-02-05T16:22:17.506599+01:00",
   "saunas": [
     {
       "name": "Sauna",
-      "current_seats": 25,
+      "current_seats": 26,
       "max_seats": 40,
-      "occupancy_percent": 62.5,
+      "occupancy_percent": 65.0,
       "capacity_message": "Mir si guet bsuecht. | Quite busy"
     },
     {
