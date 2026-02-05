@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-05T18:10:26.241325+01:00",
+  "timestamp": "2026-02-05T18:15:23.760947+01:00",
   "saunas": [
     {
       "name": "Sauna",
-      "current_seats": 43,
+      "current_seats": 45,
       "max_seats": 40,
-      "occupancy_percent": 107.5,
-      "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time."
+      "occupancy_percent": 112.5,
+      "capacity_message": "Pr\u00e4tschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting."
     },
     {
       "name": "Sauna rechts",
@@ -17,9 +17,9 @@
     }
   ],
   "weather": {
-    "temperature": 3.8,
-    "apparent_temperature": 1.9,
-    "humidity": 91,
+    "temperature": 3.5,
+    "apparent_temperature": 1.5,
+    "humidity": 92,
     "precipitation": 0.0,
     "weather_code": 3,
     "weather_description": "Bew\u00f6lkt | Overcast",
