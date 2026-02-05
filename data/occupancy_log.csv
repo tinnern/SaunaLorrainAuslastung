@@ -2923,3 +2923,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-02-05T11:45:24.746923+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
 2026-02-05T12:00:46.565400+01:00,Sauna,20,40,50.0,Es het gäbig Platz. | Plenty of space.
 2026-02-05T12:00:46.565400+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
+2026-02-05T12:04:13.186530+01:00,Sauna,20,40,50.0,Es het gäbig Platz. | Plenty of space.
+2026-02-05T12:04:13.186530+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
