@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-06T09:56:51.908467+01:00",
+  "timestamp": "2026-02-06T10:00:44.284622+01:00",
   "saunas": [
     {
       "name": "Sauna",
-      "current_seats": -1,
+      "current_seats": 0,
       "max_seats": 40,
-      "occupancy_percent": -2.5,
-      "capacity_message": "Mir hei zue. | Closed."
+      "occupancy_percent": 0.0,
+      "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
     },
     {
       "name": "Sauna rechts",
@@ -17,10 +17,10 @@
     }
   ],
   "weather": {
-    "temperature": 3.9,
-    "apparent_temperature": 2.2,
+    "temperature": 4.1,
+    "apparent_temperature": 2.3,
     "humidity": 95,
-    "precipitation": 0.3,
+    "precipitation": 0.1,
     "weather_code": 61,
     "weather_description": "Leichter Regen | Slight rain",
     "cloud_cover": 100,
