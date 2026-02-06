@@ -59134,5 +59134,43 @@
       "is_rainy": true,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-02-06T21:30:32.389512+01:00",
+    "name": "Sauna",
+    "current_seats": 41,
+    "max_seats": 40,
+    "occupancy_percent": 102.5,
+    "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time.",
+    "weather": {
+      "temperature": 5.3,
+      "apparent_temperature": 3.4,
+      "humidity": 89,
+      "precipitation": 0.1,
+      "weather_code": 61,
+      "weather_description": "Leichter Regen | Slight rain",
+      "cloud_cover": 100,
+      "is_rainy": true,
+      "is_sunny": false
+    }
+  },
+  {
+    "timestamp": "2026-02-06T21:30:32.389512+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 21,
+    "max_seats": 40,
+    "occupancy_percent": 52.5,
+    "capacity_message": "Es het g\u00e4big Platz. | Plenty of space.",
+    "weather": {
+      "temperature": 5.3,
+      "apparent_temperature": 3.4,
+      "humidity": 89,
+      "precipitation": 0.1,
+      "weather_code": 61,
+      "weather_description": "Leichter Regen | Slight rain",
+      "cloud_cover": 100,
+      "is_rainy": true,
+      "is_sunny": false
+    }
   }
 ]
