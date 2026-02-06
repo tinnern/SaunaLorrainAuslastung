@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-02-06T17:00:45.199910+01:00",
+  "timestamp": "2026-02-06T17:07:01.110571+01:00",
   "saunas": [
-    {
-      "name": "Sauna",
-      "current_seats": 36,
-      "max_seats": 40,
-      "occupancy_percent": 90.0,
-      "capacity_message": "Mir si fasch vou. | Almost full."
-    },
     {
       "name": "Sauna rechts",
       "current_seats": -1,
       "max_seats": 40,
       "occupancy_percent": -2.5,
       "capacity_message": "Mir hei zue. | Closed."
+    },
+    {
+      "name": "Sauna",
+      "current_seats": 36,
+      "max_seats": 40,
+      "occupancy_percent": 90.0,
+      "capacity_message": "Mir si fasch vou. | Almost full."
     }
   ],
   "weather": {
