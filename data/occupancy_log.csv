@@ -3487,3 +3487,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-02-07T19:00:42.311901+01:00,Sauna,1,40,2.5,Es het gäbig Platz. | Plenty of space.
 2026-02-07T19:15:21.987303+01:00,Sauna rechts,40,40,100.0,Prätschvou und es git e Wartezyt. | Full with a waiting time.
 2026-02-07T19:15:21.987303+01:00,Sauna,1,40,2.5,Es het gäbig Platz. | Plenty of space.
+2026-02-07T19:30:33.520042+01:00,Sauna rechts,39,40,97.5,Mir si fasch vou. | Almost full.
+2026-02-07T19:30:33.520042+01:00,Sauna,1,40,2.5,Es het gäbig Platz. | Plenty of space.
