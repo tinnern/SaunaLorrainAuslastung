@@ -411,14 +411,14 @@ def log_occupancy(saunas, weather=None):
     # Load existing records for stuck detection
     records = load_existing_data()
 
-    # Filter out stuck saunas for display (but still log all for history)
+    # Filter out stuck/erroneous saunas - don't log bad data at all
     valid_saunas, stuck_saunas = filter_valid_saunas(saunas, records)
 
     # Save current state with only valid saunas
     save_current(valid_saunas, timestamp, weather)
 
-    # Append new records
-    for sauna in saunas:
+    # Only log valid saunas (skip erroneous sensor data entirely)
+    for sauna in valid_saunas:
         current_seats = sauna.get("current_seats", 0)
         max_seats = sauna.get("max_seats", 1)
         occupancy_pct = round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0
@@ -443,13 +443,13 @@ def log_occupancy(saunas, weather=None):
     calculate_statistics(records)
     calculate_weather_statistics(records)
 
-    # Also save to CSV for compatibility
+    # Also save to CSV for compatibility (only valid saunas)
     csv_exists = CSV_FILE.exists()
     with open(CSV_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not csv_exists:
             writer.writerow(["timestamp", "name", "current_seats", "max_seats", "occupancy_percent", "capacity_message"])
-        for sauna in saunas:
+        for sauna in valid_saunas:
             current_seats = sauna.get("current_seats", 0)
             max_seats = sauna.get("max_seats", 1)
             writer.writerow([
@@ -461,7 +461,7 @@ def log_occupancy(saunas, weather=None):
                 sauna.get("capacity_message", "")
             ])
 
-    print(f"[{timestamp}] Logged {len(saunas)} sauna(s)")
+    print(f"[{timestamp}] Logged {len(valid_saunas)} valid sauna(s), skipped {len(stuck_saunas)} erroneous")
 
 
 def main():
