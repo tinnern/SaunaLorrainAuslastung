@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-08T10:30:31.339679+01:00",
+  "timestamp": "2026-02-08T10:34:13.483654+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -7,13 +7,6 @@
       "max_seats": 40,
       "occupancy_percent": 75.0,
       "capacity_message": "Mir si guet bsuecht. | Quite busy"
-    },
-    {
-      "name": "Sauna",
-      "current_seats": 1,
-      "max_seats": 40,
-      "occupancy_percent": 2.5,
-      "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
     }
   ],
   "weather": {

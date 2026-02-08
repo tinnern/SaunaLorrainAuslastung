@@ -21,6 +21,12 @@ JSON_FILE = DATA_DIR / "occupancy_log.json"
 CURRENT_FILE = DATA_DIR / "current.json"
 WEATHER_STATS_FILE = DATA_DIR / "weather_stats.json"
 
+# Stuck detection settings
+# "Sauna" is the reliable sensor (15% change rate), "Sauna rechts" often gets stuck (2.5% change rate)
+PREFERRED_SAUNA = "Sauna"
+STUCK_THRESHOLD = 10  # Number of consecutive identical readings to consider stuck
+MIN_VALID_OCCUPANCY = 0  # -2.5% means closed, which is valid
+
 # Open-Meteo API for Bern, Switzerland (46.948°N, 7.447°E)
 WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast"
 BERN_LAT = 46.948
@@ -113,6 +119,73 @@ def load_existing_data():
     return []
 
 
+def is_sauna_stuck(records, sauna_name, current_value, threshold=STUCK_THRESHOLD):
+    """
+    Check if a sauna sensor appears to be stuck by comparing with recent history.
+    Returns True if the last `threshold` readings all have the same value.
+
+    Uses adaptive threshold: suspicious values (very low like 2.5%) trigger faster.
+    """
+    # Skip closed state
+    if current_value == -2.5:
+        return False
+
+    # Adaptive threshold: very low values (1-2 people = 2.5-5%) are suspicious
+    # and should trigger stuck detection sooner
+    if current_value <= 5.0:
+        effective_threshold = 3  # Trigger after just 3 identical readings
+    elif current_value <= 10.0:
+        effective_threshold = 5
+    else:
+        effective_threshold = threshold
+
+    # Get recent entries for this sauna (excluding closed state -2.5%)
+    recent = [
+        r for r in records[-effective_threshold * 2:]
+        if r.get("name") == sauna_name and r.get("occupancy_percent") != -2.5
+    ][-effective_threshold:]
+
+    if len(recent) < effective_threshold:
+        return False  # Not enough history to determine
+
+    # Check if all recent values are identical to the current value
+    all_same = all(r.get("occupancy_percent") == current_value for r in recent)
+    return all_same
+
+
+def filter_valid_saunas(saunas, records):
+    """
+    Filter and select valid sauna data, preferring reliable sensors.
+    Returns list of saunas with valid, non-stuck data.
+
+    Strategy:
+    - "Sauna" is the primary reliable sensor (15% change rate)
+    - "Sauna rechts" is a backup but often gets stuck (2.5% change rate)
+    - Prefer "Sauna" when both are available and valid
+    - Skip any sauna that appears stuck
+    """
+    valid_saunas = []
+    stuck_saunas = []
+
+    for sauna in saunas:
+        name = sauna.get("name", "Unknown")
+        current_seats = sauna.get("current_seats", 0)
+        max_seats = sauna.get("max_seats", 1)
+        occupancy = round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0
+
+        # Check if this sauna appears stuck
+        if is_sauna_stuck(records, name, occupancy):
+            stuck_saunas.append(name)
+            print(f"  Warning: '{name}' appears stuck at {occupancy}%, skipping")
+            continue
+
+        valid_saunas.append(sauna)
+
+    # If we have both saunas valid, prefer the reliable one for display
+    # but still log both for historical data
+    return valid_saunas, stuck_saunas
+
+
 def save_json_data(records):
     """Save data to JSON file."""
     with open(JSON_FILE, "w", encoding="utf-8") as f:
@@ -120,7 +193,7 @@ def save_json_data(records):
 
 
 def save_current(saunas, timestamp, weather=None):
-    """Save current state for quick access."""
+    """Save current state for quick access. Only includes valid (non-stuck) saunas."""
     current = {
         "timestamp": timestamp,
         "saunas": []
@@ -327,11 +400,14 @@ def log_occupancy(saunas, weather=None):
 
     timestamp = datetime.now(ZoneInfo("Europe/Zurich")).isoformat()
 
-    # Save current state
-    save_current(saunas, timestamp, weather)
-
-    # Load existing records
+    # Load existing records for stuck detection
     records = load_existing_data()
+
+    # Filter out stuck saunas for display (but still log all for history)
+    valid_saunas, stuck_saunas = filter_valid_saunas(saunas, records)
+
+    # Save current state with only valid saunas
+    save_current(valid_saunas, timestamp, weather)
 
     # Append new records
     for sauna in saunas:
@@ -389,12 +465,19 @@ def main():
     weather = fetch_weather()
 
     if saunas:
+        # Load records for stuck detection info
+        records = load_existing_data()
+
         log_occupancy(saunas, weather)
         for sauna in saunas:
             current = sauna.get("current_seats", 0)
             max_seats = sauna.get("max_seats", 1)
             pct = round((current / max_seats) * 100, 1) if max_seats > 0 else 0
-            print(f"  {sauna.get('name')}: {current}/{max_seats} ({pct}%) - {sauna.get('capacity_message')}")
+            # Check if this one is stuck
+            stuck_marker = ""
+            if is_sauna_stuck(records, sauna.get("name"), pct):
+                stuck_marker = " [STUCK - excluded from display]"
+            print(f"  {sauna.get('name')}: {current}/{max_seats} ({pct}%) - {sauna.get('capacity_message')}{stuck_marker}")
 
         if weather:
             print(f"  Weather: {weather.get('temperature')}°C, {weather.get('weather_description')}")
