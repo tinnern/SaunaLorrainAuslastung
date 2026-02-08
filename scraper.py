@@ -153,44 +153,63 @@ def is_sauna_stuck(records, sauna_name, current_value, threshold=STUCK_THRESHOLD
     return all_same
 
 
+def is_sauna_valid(sauna, records):
+    """Check if a sauna reading is valid (not stuck, not implausibly low)."""
+    name = sauna.get("name", "Unknown")
+    current_seats = sauna.get("current_seats", 0)
+    max_seats = sauna.get("max_seats", 1)
+    occupancy = round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0
+
+    # Reject implausibly low values (1-2 people in a 40-seat sauna)
+    if 0 < current_seats <= 2 and current_seats != max_seats:
+        print(f"  Warning: '{name}' shows implausible {current_seats} people")
+        return False
+
+    # Check if stuck
+    if is_sauna_stuck(records, name, occupancy):
+        print(f"  Warning: '{name}' appears stuck at {occupancy}%")
+        return False
+
+    return True
+
+
 def filter_valid_saunas(saunas, records):
     """
-    Filter and select valid sauna data, preferring reliable sensors.
-    Returns list of saunas with valid, non-stuck data.
+    Select the best sauna data source.
 
     Strategy:
-    - "Sauna" is the primary reliable sensor (15% change rate)
-    - "Sauna rechts" is a backup but often gets stuck (2.5% change rate)
-    - Prefer "Sauna" when both are available and valid
-    - Skip any sauna that appears stuck
-    - Skip implausibly low values (1-2 people) as these are sensor errors
+    - "Sauna" is the PRIMARY sensor - always use it when valid
+    - "Sauna rechts" is the FALLBACK - only use when "Sauna" is broken
+    - Never show both, just one authoritative source
     """
+    # Find each sauna in the response
+    sauna_main = next((s for s in saunas if s.get("name") == "Sauna"), None)
+    sauna_rechts = next((s for s in saunas if s.get("name") == "Sauna rechts"), None)
+
     valid_saunas = []
     stuck_saunas = []
 
-    for sauna in saunas:
-        name = sauna.get("name", "Unknown")
-        current_seats = sauna.get("current_seats", 0)
-        max_seats = sauna.get("max_seats", 1)
-        occupancy = round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0
+    # Check if primary "Sauna" is valid
+    if sauna_main and is_sauna_valid(sauna_main, records):
+        valid_saunas.append(sauna_main)
+        print(f"  Using primary sensor: Sauna")
+    elif sauna_main:
+        stuck_saunas.append("Sauna")
+        # Primary is broken, try fallback
+        if sauna_rechts and is_sauna_valid(sauna_rechts, records):
+            valid_saunas.append(sauna_rechts)
+            print(f"  Primary broken, using fallback: Sauna rechts")
+        elif sauna_rechts:
+            stuck_saunas.append("Sauna rechts")
+            print(f"  Warning: Both sensors appear broken!")
+    elif sauna_rechts:
+        # No primary returned, use fallback if valid
+        if is_sauna_valid(sauna_rechts, records):
+            valid_saunas.append(sauna_rechts)
+            print(f"  Primary not available, using: Sauna rechts")
+        else:
+            stuck_saunas.append("Sauna rechts")
 
-        # Immediately reject implausibly low values (1-2 people in a 40-seat sauna)
-        # This is almost certainly a sensor error, not real occupancy
-        if 0 < current_seats <= 2 and current_seats != max_seats:
-            stuck_saunas.append(name)
-            print(f"  Warning: '{name}' shows implausible {current_seats} people, skipping")
-            continue
-
-        # Check if this sauna appears stuck
-        if is_sauna_stuck(records, name, occupancy):
-            stuck_saunas.append(name)
-            print(f"  Warning: '{name}' appears stuck at {occupancy}%, skipping")
-            continue
-
-        valid_saunas.append(sauna)
-
-    # If we have both saunas valid, prefer the reliable one for display
-    # but still log both for historical data
     return valid_saunas, stuck_saunas
 
 
