@@ -163,6 +163,7 @@ def filter_valid_saunas(saunas, records):
     - "Sauna rechts" is a backup but often gets stuck (2.5% change rate)
     - Prefer "Sauna" when both are available and valid
     - Skip any sauna that appears stuck
+    - Skip implausibly low values (1-2 people) as these are sensor errors
     """
     valid_saunas = []
     stuck_saunas = []
@@ -172,6 +173,13 @@ def filter_valid_saunas(saunas, records):
         current_seats = sauna.get("current_seats", 0)
         max_seats = sauna.get("max_seats", 1)
         occupancy = round((current_seats / max_seats) * 100, 1) if max_seats > 0 else 0
+
+        # Immediately reject implausibly low values (1-2 people in a 40-seat sauna)
+        # This is almost certainly a sensor error, not real occupancy
+        if 0 < current_seats <= 2 and current_seats != max_seats:
+            stuck_saunas.append(name)
+            print(f"  Warning: '{name}' shows implausible {current_seats} people, skipping")
+            continue
 
         # Check if this sauna appears stuck
         if is_sauna_stuck(records, name, occupancy):
