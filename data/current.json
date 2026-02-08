@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-09T00:15:38.209295+01:00",
+  "timestamp": "2026-02-09T00:30:41.639482+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -8,16 +8,5 @@
       "occupancy_percent": -2.5,
       "capacity_message": "Mir hei zue. | Closed."
     }
-  ],
-  "weather": {
-    "temperature": 2.4,
-    "apparent_temperature": 0.1,
-    "humidity": 96,
-    "precipitation": 0.0,
-    "weather_code": 45,
-    "weather_description": "Nebel | Fog",
-    "cloud_cover": 100,
-    "is_rainy": false,
-    "is_sunny": false
-  }
+  ]
 }
