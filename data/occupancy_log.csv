@@ -3589,3 +3589,5 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-02-08T06:17:27.713360+01:00,Sauna,1,40,2.5,Es het gäbig Platz. | Plenty of space.
 2026-02-08T06:30:31.231073+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
 2026-02-08T06:30:31.231073+01:00,Sauna,1,40,2.5,Es het gäbig Platz. | Plenty of space.
+2026-02-08T06:45:20.552266+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | Closed.
+2026-02-08T06:45:20.552266+01:00,Sauna,1,40,2.5,Es het gäbig Platz. | Plenty of space.
