@@ -66435,5 +66435,13 @@
       "is_rainy": false,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-02-09T16:13:18.029472+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 39,
+    "max_seats": 40,
+    "occupancy_percent": 97.5,
+    "capacity_message": "Mir si fasch vou. | Almost full."
   }
 ]
