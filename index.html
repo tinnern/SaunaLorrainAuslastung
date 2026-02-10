@@ -457,8 +457,8 @@
     </div>
 
     <script>
-        // Only show "Sauna" (not "Sauna rechts")
-        const DISPLAY_SAUNA = 'Sauna';
+        // Accept both "Sauna" and "Sauna rechts" (fallback sensor)
+        const DISPLAY_SAUNAS = ['Sauna', 'Sauna rechts'];
         const CHART_COLOR = '#f39c12';
 
         // Weekday configuration
@@ -569,8 +569,8 @@
                 return;
             }
 
-            // Only show "Sauna", not "Sauna rechts"
-            const sauna = data.saunas.find(s => s.name === DISPLAY_SAUNA);
+            // Accept both "Sauna" and "Sauna rechts" (use first match)
+            const sauna = data.saunas.find(s => DISPLAY_SAUNAS.includes(s.name));
             if (!sauna) {
                 container.innerHTML = '<div class="loading">Keine aktuellen Daten verfügbar</div>';
                 return;
@@ -664,10 +664,20 @@
             }
         }
 
+        function getSaunaData(hourData) {
+            // Try each sauna name in order of preference
+            for (const name of DISPLAY_SAUNAS) {
+                if (hourData && hourData[name]) {
+                    return hourData[name];
+                }
+            }
+            return null;
+        }
+
         function hasWeekdayData(weekday) {
             const weekdayData = globalStats?.by_weekday?.[weekday] || {};
             for (let h = 0; h < 24; h++) {
-                if (weekdayData[h] && weekdayData[h][DISPLAY_SAUNA]) {
+                if (getSaunaData(weekdayData[h])) {
                     return true;
                 }
             }
@@ -723,8 +733,7 @@
 
             for (let h = openHour; h <= closeHour; h++) {
                 hours.push(`${h}:00`);
-                const hourData = weekdayData[h] || {};
-                const saunaData = hourData[DISPLAY_SAUNA];
+                const saunaData = getSaunaData(weekdayData[h]);
                 data.push(saunaData ? saunaData.avg : null);
             }
 
@@ -751,8 +760,7 @@
                 const [openHour, closeHour] = openingHours;
                 for (let h = openHour; h <= closeHour; h++) {
                     hours.push(`${h}:00`);
-                    const hourData = weekdayData[h] || {};
-                    const saunaData = hourData[DISPLAY_SAUNA];
+                    const saunaData = getSaunaData(weekdayData[h]);
                     data.push(saunaData ? saunaData.avg : null);
                 }
             }
@@ -817,7 +825,7 @@
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
 
             const filteredData = records
-                .filter(r => r.name === DISPLAY_SAUNA && new Date(r.timestamp) >= oneDayAgo)
+                .filter(r => DISPLAY_SAUNAS.includes(r.name) && new Date(r.timestamp) >= oneDayAgo)
                 .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
             // Need at least 2 data points
@@ -1102,11 +1110,10 @@
 
             const [openHour, closeHour] = openingHours;
 
-            // Find hours with lowest average occupancy (only for "Sauna")
+            // Find hours with lowest average occupancy
             const hourlyAvgs = [];
             for (let h = openHour; h <= closeHour; h++) {
-                const hourData = weekdayData[h] || {};
-                const saunaData = hourData[DISPLAY_SAUNA];
+                const saunaData = getSaunaData(weekdayData[h]);
                 if (saunaData && saunaData.avg !== undefined) {
                     hourlyAvgs.push({ hour: h, avg: saunaData.avg });
                 }

@@ -22,8 +22,9 @@ CURRENT_FILE = DATA_DIR / "current.json"
 WEATHER_STATS_FILE = DATA_DIR / "weather_stats.json"
 
 # Stuck detection settings
-# "Sauna" is the reliable sensor (15% change rate), "Sauna rechts" often gets stuck (2.5% change rate)
+# "Sauna" is the primary sensor, "Sauna rechts" is the fallback
 PREFERRED_SAUNA = "Sauna"
+FALLBACK_SAUNA = "Sauna rechts"
 STUCK_THRESHOLD = 10  # Number of consecutive identical readings to consider stuck
 MIN_VALID_OCCUPANCY = 0  # -2.5% means closed, which is valid
 
@@ -178,37 +179,37 @@ def filter_valid_saunas(saunas, records):
     Select the best sauna data source.
 
     Strategy:
-    - "Sauna" is the PRIMARY sensor - always use it when valid
-    - "Sauna rechts" is the FALLBACK - only use when "Sauna" is broken
+    - Use PREFERRED_SAUNA as the PRIMARY sensor - always use it when valid
+    - Use FALLBACK_SAUNA as the FALLBACK - only use when primary is broken
     - Never show both, just one authoritative source
     """
     # Find each sauna in the response
-    sauna_main = next((s for s in saunas if s.get("name") == "Sauna"), None)
-    sauna_rechts = next((s for s in saunas if s.get("name") == "Sauna rechts"), None)
+    primary = next((s for s in saunas if s.get("name") == PREFERRED_SAUNA), None)
+    fallback = next((s for s in saunas if s.get("name") == FALLBACK_SAUNA), None)
 
     valid_saunas = []
     stuck_saunas = []
 
-    # Check if primary "Sauna" is valid
-    if sauna_main and is_sauna_valid(sauna_main, records):
-        valid_saunas.append(sauna_main)
-        print(f"  Using primary sensor: Sauna")
-    elif sauna_main:
-        stuck_saunas.append("Sauna")
+    # Check if primary sensor is valid
+    if primary and is_sauna_valid(primary, records):
+        valid_saunas.append(primary)
+        print(f"  Using primary sensor: {PREFERRED_SAUNA}")
+    elif primary:
+        stuck_saunas.append(PREFERRED_SAUNA)
         # Primary is broken, try fallback
-        if sauna_rechts and is_sauna_valid(sauna_rechts, records):
-            valid_saunas.append(sauna_rechts)
-            print(f"  Primary broken, using fallback: Sauna rechts")
-        elif sauna_rechts:
-            stuck_saunas.append("Sauna rechts")
+        if fallback and is_sauna_valid(fallback, records):
+            valid_saunas.append(fallback)
+            print(f"  Primary broken, using fallback: {FALLBACK_SAUNA}")
+        elif fallback:
+            stuck_saunas.append(FALLBACK_SAUNA)
             print(f"  Warning: Both sensors appear broken!")
-    elif sauna_rechts:
+    elif fallback:
         # No primary returned, use fallback if valid
-        if is_sauna_valid(sauna_rechts, records):
-            valid_saunas.append(sauna_rechts)
-            print(f"  Primary not available, using: Sauna rechts")
+        if is_sauna_valid(fallback, records):
+            valid_saunas.append(fallback)
+            print(f"  Primary not available, using: {FALLBACK_SAUNA}")
         else:
-            stuck_saunas.append("Sauna rechts")
+            stuck_saunas.append(FALLBACK_SAUNA)
 
     return valid_saunas, stuck_saunas
 
