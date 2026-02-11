@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-11T09:29:26.821955+01:00",
+  "timestamp": "2026-02-11T09:30:31.493721+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -10,9 +10,9 @@
     }
   ],
   "weather": {
-    "temperature": 8.0,
-    "apparent_temperature": 3.8,
-    "humidity": 77,
+    "temperature": 8.2,
+    "apparent_temperature": 3.9,
+    "humidity": 76,
     "precipitation": 0.0,
     "weather_code": 80,
     "weather_description": "Leichte Regenschauer | Slight rain showers",
