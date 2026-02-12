@@ -68509,5 +68509,24 @@
       "is_rainy": true,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-02-12T14:30:36.346929+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 16,
+    "max_seats": 40,
+    "occupancy_percent": 40.0,
+    "capacity_message": "Es het g\u00e4big Platz. | Plenty of space.",
+    "weather": {
+      "temperature": 7.4,
+      "apparent_temperature": 3.5,
+      "humidity": 77,
+      "precipitation": 0.1,
+      "weather_code": 61,
+      "weather_description": "Leichter Regen | Slight rain",
+      "cloud_cover": 100,
+      "is_rainy": true,
+      "is_sunny": false
+    }
   }
 ]
