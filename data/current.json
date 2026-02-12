@@ -1,22 +1,22 @@
 {
-  "timestamp": "2026-02-12T14:45:25.022020+01:00",
+  "timestamp": "2026-02-12T15:00:53.151911+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
-      "current_seats": 16,
+      "current_seats": 17,
       "max_seats": 40,
-      "occupancy_percent": 40.0,
+      "occupancy_percent": 42.5,
       "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
     }
   ],
   "weather": {
-    "temperature": 7.4,
+    "temperature": 7.5,
     "apparent_temperature": 3.3,
-    "humidity": 77,
-    "precipitation": 0.2,
+    "humidity": 76,
+    "precipitation": 0.1,
     "weather_code": 61,
     "weather_description": "Leichter Regen | Slight rain",
-    "cloud_cover": 100,
+    "cloud_cover": 99,
     "is_rainy": true,
     "is_sunny": false
   }
