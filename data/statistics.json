@@ -22,10 +22,10 @@
         "count": 59
       },
       "Sauna rechts": {
-        "avg": 27.4,
+        "avg": 26.9,
         "min": -2.5,
         "max": 112.5,
-        "count": 69
+        "count": 70
       }
     },
     "2": {
@@ -1375,10 +1375,10 @@
           "count": 9
         },
         "Sauna rechts": {
-          "avg": 21.7,
+          "avg": 19.8,
           "min": -2.5,
           "max": 70.0,
-          "count": 12
+          "count": 13
         }
       },
       "2": {
