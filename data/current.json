@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-14T11:30:34.779640+01:00",
+  "timestamp": "2026-02-14T11:35:28.029272+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
-      "current_seats": 22,
+      "current_seats": 21,
       "max_seats": 40,
-      "occupancy_percent": 55.0,
+      "occupancy_percent": 52.5,
       "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
     }
   ],
