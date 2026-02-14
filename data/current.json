@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-14T18:58:49.485677+01:00",
+  "timestamp": "2026-02-14T19:00:43.434977+01:00",
   "saunas": [],
   "weather": {
-    "temperature": 2.8,
-    "apparent_temperature": -0.1,
-    "humidity": 89,
-    "precipitation": 0.3,
+    "temperature": 2.5,
+    "apparent_temperature": -0.3,
+    "humidity": 90,
+    "precipitation": 0.2,
     "weather_code": 61,
     "weather_description": "Leichter Regen | Slight rain",
     "cloud_cover": 100,
