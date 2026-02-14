@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-14T15:00:43.346522+01:00",
+  "timestamp": "2026-02-14T15:15:22.020096+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
-      "current_seats": 46,
+      "current_seats": 44,
       "max_seats": 40,
-      "occupancy_percent": 115.0,
+      "occupancy_percent": 110.0,
       "capacity_message": "Pr\u00e4tschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting."
     }
   ],
