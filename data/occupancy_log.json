@@ -75050,5 +75050,24 @@
       "is_rainy": false,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-02-15T12:30:33.457020+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 40,
+    "max_seats": 40,
+    "occupancy_percent": 100.0,
+    "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time.",
+    "weather": {
+      "temperature": 2.8,
+      "apparent_temperature": 0.5,
+      "humidity": 80,
+      "precipitation": 0.0,
+      "weather_code": 3,
+      "weather_description": "Bew\u00f6lkt | Overcast",
+      "cloud_cover": 77,
+      "is_rainy": false,
+      "is_sunny": false
+    }
   }
 ]
