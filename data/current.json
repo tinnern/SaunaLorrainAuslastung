@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-15T19:52:27.952723+01:00",
+  "timestamp": "2026-02-15T20:00:50.040885+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -8,16 +8,5 @@
       "occupancy_percent": 100.0,
       "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time."
     }
-  ],
-  "weather": {
-    "temperature": 2.7,
-    "apparent_temperature": -0.3,
-    "humidity": 87,
-    "precipitation": 0.2,
-    "weather_code": 61,
-    "weather_description": "Leichter Regen | Slight rain",
-    "cloud_cover": 100,
-    "is_rainy": true,
-    "is_sunny": false
-  }
+  ]
 }
