@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-02-16T21:49:24.532407+01:00",
+  "timestamp": "2026-02-16T22:00:46.229859+01:00",
   "saunas": [],
   "weather": {
     "temperature": 3.4,
     "apparent_temperature": -0.5,
     "humidity": 85,
     "precipitation": 0.1,
-    "weather_code": 3,
-    "weather_description": "Bew\u00f6lkt | Overcast",
+    "weather_code": 61,
+    "weather_description": "Leichter Regen | Slight rain",
     "cloud_cover": 100,
     "is_rainy": true,
     "is_sunny": false
