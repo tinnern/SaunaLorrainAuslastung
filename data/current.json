@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-18T12:30:32.797272+01:00",
+  "timestamp": "2026-02-18T12:45:20.946542+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -12,7 +12,7 @@
   "weather": {
     "temperature": 2.5,
     "apparent_temperature": 0.1,
-    "humidity": 93,
+    "humidity": 92,
     "precipitation": 0.1,
     "weather_code": 55,
     "weather_description": "Dichter Nieselregen | Dense drizzle",
