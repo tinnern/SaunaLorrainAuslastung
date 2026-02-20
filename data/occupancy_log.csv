@@ -4668,3 +4668,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-02-20T14:34:28.978999+01:00,Sauna rechts,36,40,90.0,Mir si fasch vou. | Almost full.
 2026-02-20T14:45:29.508849+01:00,Sauna rechts,43,40,107.5,Prätschvou und es git e Wartezyt. | Full with a waiting time.
 2026-02-20T15:00:46.873615+01:00,Sauna rechts,43,40,107.5,Prätschvou und es git e Wartezyt. | Full with a waiting time.
+2026-02-20T15:15:31.102815+01:00,Sauna rechts,45,40,112.5,Prätschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting.
