@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-23T15:30:38.215485+01:00",
+  "timestamp": "2026-02-23T15:36:24.326895+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
-      "current_seats": 25,
+      "current_seats": 28,
       "max_seats": 40,
-      "occupancy_percent": 62.5,
+      "occupancy_percent": 70.0,
       "capacity_message": "Mir si guet bsuecht. | Quite busy"
     }
   ],
