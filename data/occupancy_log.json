@@ -93943,5 +93943,24 @@
     "max_seats": 40,
     "occupancy_percent": -2.5,
     "capacity_message": "Mir hei zue. | Closed."
+  },
+  {
+    "timestamp": "2026-02-25T20:28:54.764240+01:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir hei zue. | Closed.",
+    "weather": {
+      "temperature": 8.5,
+      "apparent_temperature": 7.5,
+      "humidity": 92,
+      "precipitation": 0.0,
+      "weather_code": 2,
+      "weather_description": "Teilweise bew\u00f6lkt | Partly cloudy",
+      "cloud_cover": 74,
+      "is_rainy": false,
+      "is_sunny": false
+    }
   }
 ]
