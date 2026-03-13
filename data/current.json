@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-13T05:51:01.527369+01:00",
+  "timestamp": "2026-03-13T06:55:44.045533+01:00",
   "saunas": [],
   "weather": {
     "temperature": -0.8,
@@ -8,7 +8,7 @@
     "precipitation": 0.0,
     "weather_code": 45,
     "weather_description": "Nebel | Fog",
-    "cloud_cover": 75,
+    "cloud_cover": 100,
     "is_rainy": false,
     "is_sunny": false
   }
