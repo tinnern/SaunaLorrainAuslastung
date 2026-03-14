@@ -102343,5 +102343,24 @@
     "max_seats": 40,
     "occupancy_percent": 107.5,
     "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time."
+  },
+  {
+    "timestamp": "2026-03-14T16:44:43.517559+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 43,
+    "max_seats": 40,
+    "occupancy_percent": 107.5,
+    "capacity_message": "Pr\u00e4tschvou und es git e Wartezyt. | Full with a waiting time.",
+    "weather": {
+      "temperature": 1.7,
+      "apparent_temperature": -0.9,
+      "humidity": 94,
+      "precipitation": 0.2,
+      "weather_code": 61,
+      "weather_description": "Leichter Regen | Slight rain",
+      "cloud_cover": 100,
+      "is_rainy": true,
+      "is_sunny": false
+    }
   }
 ]
