@@ -5742,3 +5742,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-03-22T17:00:35.463753+01:00,Sauna rechts,45,40,112.5,Prätschvou mit Wartezyt. Es paari si am warte. | Full with a waiting time. A few people waiting.
 2026-03-22T17:48:44.638964+01:00,Sauna rechts,60,40,150.0,Prätschvou u über 1 Stund Wartezyt! | | Crowded. Waiting time is more than 1 hour!
 2026-03-22T18:32:44.031998+01:00,Sauna rechts,62,40,155.0,Prätschvou u über 1 Stund Wartezyt! | | Crowded. Waiting time is more than 1 hour!
+2026-03-22T18:59:42.293619+01:00,Sauna rechts,62,40,155.0,Prätschvou u über 1 Stund Wartezyt! | | Crowded. Waiting time is more than 1 hour!
