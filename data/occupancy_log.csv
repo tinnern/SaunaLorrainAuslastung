@@ -5765,3 +5765,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-03-23T16:04:07.938307+01:00,Sauna rechts,22,40,55.0,Es het gäbig Platz. | Plenty of space.
 2026-03-23T17:11:58.171769+01:00,Sauna rechts,36,40,90.0,Mir si fasch vou. | Almost full.
 2026-03-23T18:11:10.426331+01:00,Sauna rechts,34,40,85.0,Mir si guet bsuecht. | Quite busy
+2026-03-23T19:05:43.295808+01:00,Sauna rechts,40,40,100.0,Prätschvou und es git e Wartezyt. | Full with a waiting time.
