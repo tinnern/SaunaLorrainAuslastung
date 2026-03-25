@@ -107489,5 +107489,24 @@
       "is_rainy": true,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-03-25T22:54:59.106450+01:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir si ir summerpouse. | We are on summer break.",
+    "weather": {
+      "temperature": 1.8,
+      "apparent_temperature": -2.5,
+      "humidity": 88,
+      "precipitation": 0.1,
+      "weather_code": 71,
+      "weather_description": "Leichter Schneefall | Slight snow",
+      "cloud_cover": 100,
+      "is_rainy": true,
+      "is_sunny": false
+    }
   }
 ]
