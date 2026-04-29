@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-29T08:38:40.942668+02:00",
+  "timestamp": "2026-04-29T11:02:23.326699+02:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -10,14 +10,14 @@
     }
   ],
   "weather": {
-    "temperature": 11.6,
-    "apparent_temperature": 11.2,
-    "humidity": 88,
-    "precipitation": 0.1,
+    "temperature": 15.3,
+    "apparent_temperature": 14.4,
+    "humidity": 69,
+    "precipitation": 0.0,
     "weather_code": 3,
     "weather_description": "Bew\u00f6lkt | Overcast",
     "cloud_cover": 100,
-    "is_rainy": true,
+    "is_rainy": false,
     "is_sunny": false
   }
 }
