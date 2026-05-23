@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-23T12:56:38.332114+02:00",
+  "timestamp": "2026-05-23T14:03:34.439746+02:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -10,9 +10,9 @@
     }
   ],
   "weather": {
-    "temperature": 24.3,
-    "apparent_temperature": 25.5,
-    "humidity": 41,
+    "temperature": 26.0,
+    "apparent_temperature": 27.0,
+    "humidity": 38,
     "precipitation": 0.0,
     "weather_code": 0,
     "weather_description": "Klar | Clear",
