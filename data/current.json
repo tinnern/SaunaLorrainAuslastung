@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-31T01:44:07.754853+02:00",
+  "timestamp": "2026-05-31T03:55:19.892159+02:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -8,16 +8,5 @@
       "occupancy_percent": -2.5,
       "capacity_message": "Mir si ir summerpouse. | We are on summer break."
     }
-  ],
-  "weather": {
-    "temperature": 14.8,
-    "apparent_temperature": 13.8,
-    "humidity": 64,
-    "precipitation": 0.0,
-    "weather_code": 0,
-    "weather_description": "Klar | Clear",
-    "cloud_cover": 17,
-    "is_rainy": false,
-    "is_sunny": true
-  }
+  ]
 }
