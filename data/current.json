@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-28T21:47:31.651588+02:00",
+  "timestamp": "2026-06-28T23:10:45.175899+02:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -10,9 +10,9 @@
     }
   ],
   "weather": {
-    "temperature": 25.9,
-    "apparent_temperature": 26.5,
-    "humidity": 46,
+    "temperature": 22.7,
+    "apparent_temperature": 23.8,
+    "humidity": 62,
     "precipitation": 0.0,
     "weather_code": 3,
     "weather_description": "Bew\u00f6lkt | Overcast",
