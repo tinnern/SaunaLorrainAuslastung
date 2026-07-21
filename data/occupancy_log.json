@@ -136933,5 +136933,24 @@
       "is_rainy": false,
       "is_sunny": true
     }
+  },
+  {
+    "timestamp": "2026-07-21T17:10:19.305209+02:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir si ir summerpouse. | We are on summer break.",
+    "weather": {
+      "temperature": 24.0,
+      "apparent_temperature": 21.7,
+      "humidity": 30,
+      "precipitation": 0.0,
+      "weather_code": 0,
+      "weather_description": "Klar | Clear",
+      "cloud_cover": 0,
+      "is_rainy": false,
+      "is_sunny": true
+    }
   }
 ]
