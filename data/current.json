@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-21T19:05:29.828606+02:00",
+  "timestamp": "2026-09-21T23:05:53.311810+02:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -10,14 +10,14 @@
     }
   ],
   "weather": {
-    "temperature": 17.9,
-    "apparent_temperature": 16.8,
-    "humidity": 60,
+    "temperature": 12.4,
+    "apparent_temperature": 11.8,
+    "humidity": 77,
     "precipitation": 0.0,
-    "weather_code": 3,
-    "weather_description": "Bew\u00f6lkt | Overcast",
-    "cloud_cover": 100,
+    "weather_code": 0,
+    "weather_description": "Klar | Clear",
+    "cloud_cover": 1,
     "is_rainy": false,
-    "is_sunny": false
+    "is_sunny": true
   }
 }
