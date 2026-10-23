@@ -1,22 +1,22 @@
 {
-  "timestamp": "2026-10-23T20:39:27.655034+02:00",
+  "timestamp": "2026-10-23T23:42:19.530630+02:00",
   "saunas": [
     {
       "name": "Sauna rechts",
       "current_seats": -1,
       "max_seats": 40,
       "occupancy_percent": -2.5,
-      "capacity_message": "Mir si ir summerpouse. | We are on summer break."
+      "capacity_message": "Mir hei zue. | We are closed."
     }
   ],
   "weather": {
-    "temperature": 8.6,
-    "apparent_temperature": 5.3,
-    "humidity": 71,
-    "precipitation": 0.2,
+    "temperature": 7.4,
+    "apparent_temperature": 4.1,
+    "humidity": 77,
+    "precipitation": 0.0,
     "weather_code": 80,
     "weather_description": "Leichte Regenschauer | Slight rain showers",
-    "cloud_cover": 94,
+    "cloud_cover": 92,
     "is_rainy": true,
     "is_sunny": false
   }
