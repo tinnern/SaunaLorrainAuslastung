@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-10-25T10:41:19.345083+01:00",
+  "timestamp": "2026-10-25T14:56:50.485425+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
-      "current_seats": 40,
+      "current_seats": 63,
       "max_seats": 40,
-      "occupancy_percent": 100.0,
-      "capacity_message": "Im Mom\u00e4nt isch vou. Churzi Wartezyt. | At the moment we are full. Short waiting time."
+      "occupancy_percent": 157.5,
+      "capacity_message": "Pr\u00e4tschvou u \u00fcber 1 Stund Wartezyt! | | Crowded. Waiting time is more than 1 hour!"
     }
   ],
   "weather": {
-    "temperature": 11.0,
-    "apparent_temperature": 9.1,
-    "humidity": 80,
-    "precipitation": 0.3,
+    "temperature": 13.7,
+    "apparent_temperature": 10.3,
+    "humidity": 75,
+    "precipitation": 0.0,
     "weather_code": 61,
     "weather_description": "Leichter Regen | Slight rain",
     "cloud_cover": 100,
