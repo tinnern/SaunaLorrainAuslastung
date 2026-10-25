@@ -8488,3 +8488,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-10-24T23:48:19.123134+02:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
 2026-10-25T02:09:43.759758+02:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
 2026-10-25T05:47:14.845197+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
+2026-10-25T10:41:19.345083+01:00,Sauna rechts,40,40,100.0,Im Momänt isch vou. Churzi Wartezyt. | At the moment we are full. Short waiting time.
