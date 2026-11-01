@@ -158709,5 +158709,24 @@
       "is_rainy": false,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-11-01T14:49:29.920748+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 40,
+    "max_seats": 40,
+    "occupancy_percent": 100.0,
+    "capacity_message": "Im Mom\u00e4nt isch vou. Churzi Wartezyt. | At the moment we are full. Short waiting time.",
+    "weather": {
+      "temperature": 9.2,
+      "apparent_temperature": 4.3,
+      "humidity": 52,
+      "precipitation": 0.0,
+      "weather_code": 1,
+      "weather_description": "\u00dcberwiegend klar | Mainly clear",
+      "cloud_cover": 12,
+      "is_rainy": false,
+      "is_sunny": true
+    }
   }
 ]
