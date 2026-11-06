@@ -8541,3 +8541,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-11-05T20:01:34.786506+01:00,Sauna rechts,49,40,122.5,Im Momänt isch vou. Unger 10 Lüt si am warte. | At the moment we are full.  Less then 10 people waiting.
 2026-11-06T01:19:36.766721+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
 2026-11-06T08:14:58.068933+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
+2026-11-06T16:11:10.460398+01:00,Sauna rechts,40,40,100.0,Im Momänt isch vou. Churzi Wartezyt. | At the moment we are full. Short waiting time.
