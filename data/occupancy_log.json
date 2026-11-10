@@ -159325,5 +159325,24 @@
       "is_rainy": false,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-11-10T04:50:01.466354+01:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir hei zue. | We are closed.",
+    "weather": {
+      "temperature": 8.7,
+      "apparent_temperature": 7.7,
+      "humidity": 97,
+      "precipitation": 2.5,
+      "weather_code": 63,
+      "weather_description": "M\u00e4ssiger Regen | Moderate rain",
+      "cloud_cover": 100,
+      "is_rainy": true,
+      "is_sunny": false
+    }
   }
 ]
