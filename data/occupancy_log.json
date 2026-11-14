@@ -159634,5 +159634,13 @@
     "max_seats": 40,
     "occupancy_percent": 45.0,
     "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
+  },
+  {
+    "timestamp": "2026-11-15T00:57:07.116266+01:00",
+    "name": "Sauna rechts",
+    "current_seats": -1,
+    "max_seats": 40,
+    "occupancy_percent": -2.5,
+    "capacity_message": "Mir hei zue. | We are closed."
   }
 ]
