@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-18T13:17:55.093928+01:00",
+  "timestamp": "2026-11-18T21:50:37.885452+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
@@ -8,5 +8,16 @@
       "occupancy_percent": -2.5,
       "capacity_message": "Mir hei zue. | We are closed."
     }
-  ]
+  ],
+  "weather": {
+    "temperature": 10.7,
+    "apparent_temperature": 7.3,
+    "humidity": 59,
+    "precipitation": 0.0,
+    "weather_code": 2,
+    "weather_description": "Teilweise bew\u00f6lkt | Partly cloudy",
+    "cloud_cover": 47,
+    "is_rainy": false,
+    "is_sunny": false
+  }
 }
