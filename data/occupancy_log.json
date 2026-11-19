@@ -159886,5 +159886,13 @@
       "is_rainy": true,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-11-19T11:42:02.497167+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 5,
+    "max_seats": 40,
+    "occupancy_percent": 12.5,
+    "capacity_message": "Es het g\u00e4big Platz. | Plenty of space."
   }
 ]
