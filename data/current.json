@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-11-20T18:50:55.313143+01:00",
+  "timestamp": "2026-11-21T00:54:17.735642+01:00",
   "saunas": [
     {
       "name": "Sauna rechts",
-      "current_seats": 39,
+      "current_seats": -1,
       "max_seats": 40,
-      "occupancy_percent": 97.5,
-      "capacity_message": "Mir si fasch vou. | Almost full."
+      "occupancy_percent": -2.5,
+      "capacity_message": "Mir hei zue. | We are closed."
     }
   ],
   "weather": {
-    "temperature": 8.3,
-    "apparent_temperature": 4.1,
-    "humidity": 70,
-    "precipitation": 0.0,
+    "temperature": 7.1,
+    "apparent_temperature": 3.2,
+    "humidity": 82,
+    "precipitation": 0.3,
     "weather_code": 61,
     "weather_description": "Leichter Regen | Slight rain",
     "cloud_cover": 100,
