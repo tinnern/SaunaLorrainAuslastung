@@ -8605,3 +8605,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-11-23T12:18:21.581923+01:00,Sauna rechts,13,40,32.5,Es het gäbig Platz. | Plenty of space.
 2026-11-23T23:52:25.506594+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
 2026-11-24T07:52:47.348864+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
+2026-11-24T19:46:28.671850+01:00,Sauna rechts,45,40,112.5,Im Momänt isch vou. Es paari si am warte. | At the moment we are full.  A few people waiting.
