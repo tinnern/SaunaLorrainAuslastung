@@ -8611,3 +8611,4 @@ timestamp,name,current_seats,max_seats,occupancy_percent,capacity_message
 2026-11-25T22:59:45.993242+01:00,Sauna rechts,5,40,12.5,Es het gäbig Platz. | Plenty of space.
 2026-11-26T05:05:18.494855+01:00,Sauna rechts,5,40,12.5,Es het gäbig Platz. | Plenty of space.
 2026-11-26T14:56:45.423141+01:00,Sauna rechts,24,40,60.0,Öppe haub vou. | About half full.
+2026-11-26T23:54:36.232591+01:00,Sauna rechts,-1,40,-2.5,Mir hei zue. | We are closed.
