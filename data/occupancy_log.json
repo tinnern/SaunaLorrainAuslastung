@@ -160241,5 +160241,24 @@
       "is_rainy": false,
       "is_sunny": false
     }
+  },
+  {
+    "timestamp": "2026-11-26T14:56:45.423141+01:00",
+    "name": "Sauna rechts",
+    "current_seats": 24,
+    "max_seats": 40,
+    "occupancy_percent": 60.0,
+    "capacity_message": "\u00d6ppe haub vou. | About half full.",
+    "weather": {
+      "temperature": 1.7,
+      "apparent_temperature": -1.1,
+      "humidity": 88,
+      "precipitation": 0.0,
+      "weather_code": 3,
+      "weather_description": "Bew\u00f6lkt | Overcast",
+      "cloud_cover": 100,
+      "is_rainy": false,
+      "is_sunny": false
+    }
   }
 ]
